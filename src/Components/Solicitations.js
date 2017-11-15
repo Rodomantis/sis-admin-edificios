@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, NavDropdown, NavItem, Grid } from 'react-bootstrap';
 import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
+import browserHistory from 'react-router/lib/browserHistory'
 
 var db = firebase.database();
 
@@ -57,6 +58,7 @@ export default class Solicitations extends React.Component{
                 console.log('Error: ', error)
             }
         })
+        browserHistory.goBack()
     }
     render(){
         return(

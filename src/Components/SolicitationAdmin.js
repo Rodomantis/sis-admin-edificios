@@ -37,8 +37,18 @@ export default class SolicitationAdmin extends React.Component{
         });
         var solicitations = db.ref('solicitations').orderByChild('date')
         solicitations.on('value',(snapshot)=>{
-            that.setState({
-                solicitations: snapshot.val() || ''
+            db.ref('usuarios').on('value',(userSnapshot)=>{
+                var solicitudes = snapshot.val()
+                var llavesUsuarios = []
+                var users = ''
+                users = userSnapshot.val()
+                llavesUsuarios = _.allKeys(users)
+                console.log(llavesUsuarios)
+                that.setState({
+                    solicitations: _.pick(solicitudes,(value,key)=>
+                        !(_.contains(llavesUsuarios,value.uid))
+                    )
+                })
             })
         })
     }
@@ -46,8 +56,7 @@ export default class SolicitationAdmin extends React.Component{
         return(
             <div className='Solicitations'>
             {this.state.userSavedData.nivel>=3?
-                <Col xs={12} sm={12} md={12} lg={12}>
-				<div style={{"margin":"10px", "opacity":"0.9", "height":"500px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+				<div>
                 <h3>Solicitudes de usuario pendientes</h3>
                 {this.state.solicitations == ''?
                     <h4>No hay solicitudes pendientes</h4>:
@@ -67,8 +76,7 @@ export default class SolicitationAdmin extends React.Component{
                         </tbody>
                     </Table>
                 }
-                </div>
-                </Col>:
+                </div>:
                 <h4>No tiene los permisos para ingresar a esta pagina</h4>
             }
             </div>

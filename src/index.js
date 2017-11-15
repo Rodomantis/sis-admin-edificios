@@ -4,9 +4,13 @@ import './index.css'
 import Menu from './Navigation/Menu'
 import App from './Navigation/App'
 import NoMatch from './Navigation/NoMatch'
+import Info from './Components/Info'
 import Home from './Components/Home'
 import ConsultaCliente from './Components/ConsultaCliente'
 import RegistroDep from './Components/RegistroDep'
+import ClienteDep from './Components/ClienteDep'
+import AdminUsuarios from './Components/AdminUsuarios'
+import UserAdmin from './Components/UserAdmin'
 import PagoDetalle from './Components/PagoDetalle'
 import DetalleServicio from './Components/DetalleServicio'
 import UserHome from './Navigation/UserHome'
@@ -33,15 +37,19 @@ ReactDOM.render(
                 <Route path="registros-edificio" components={RegistrosEdificio} />
                 <Route path="registros-cobros-expensas" components={RegistrosCobros} />
                 <Route path="registros-cobros-expensas/:userId/generar-recibo" components={GenerarRecibo} />
+                <Route path="admin-usuarios" components={AdminUsuarios} />
+                <Route path="admin-usuarios/:userId/usuario" components={UserAdmin} />
+                <Route path="admin-solicitudes" components={SolicitationAdmin}/>
             </Route>
             <Route path="/usuario/:userId" component={UserHome}>
                 <Route path="consulta-pagos" components={ConsultaCliente} />
                 <Route path="consulta-pagos/:idRecibo/pago-detalle" components={PagoDetalle}/>
                 <Route path="detalle-servicio/:idServicio" components={DetalleServicio} />
+                <Route path="departamentos" components={ClienteDep} />
             </Route>
             <Route path="/login" component={SisLogin}/>
             <Route path="/solicitudes" component={Solicitations}/>
-            <Route path="/admin-solicitudes" component={SolicitationAdmin}/>
+            <Route path="/contacto" component={Info}/>
             <Route path="*" component={NoMatch}/>
         </Route>
     </Router>,

@@ -10,7 +10,7 @@ export default class RegistroDep extends React.Component{
         super(props)
         this.state = {
             openModalDep: false, deparrayDep: [], buscarVecino:'',
-            arrayVecinos: [], arrayBuscarVecino: [],
+            arrayVecinos: [], arrayBuscarVecino: [], departamentos: '',
             name:'',floor:'',number:'',tel:'', selVecino:'',
         }
     }

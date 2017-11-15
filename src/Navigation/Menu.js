@@ -54,11 +54,11 @@ export default class Menu extends React.Component{
                 </Navbar.Header>
                 <Navbar.Collapse>
                 <Nav>
-                    <NavItem eventKey={1} href="#">Contacto</NavItem>
+                    <NavItem eventKey={1}><Link to={'/contacto'} style={{'color':'grey'}}>Contacto</Link></NavItem>
                     {this.state.userSavedData.nivel >= 1?
                         <NavDropdown eventKey={2} title="Usuario" id="basic-nav-dropdown">
                             <MenuItem eventKey={2.1} href={`/usuario/${this.state.userSavedData.uid}/consulta-pagos`}>Registros de pagos</MenuItem>
-                            <MenuItem eventKey={2.2} href='/'>Registros</MenuItem>
+                            <MenuItem eventKey={2.2} href={`/usuario/${this.state.userSavedData.uid}/departamentos`}>Registros Departamentos</MenuItem>
                             <MenuItem divider />
                             <MenuItem eventKey={2.3}>Separated link</MenuItem>
                         </NavDropdown>: 
@@ -69,9 +69,9 @@ export default class Menu extends React.Component{
                             <MenuItem eventKey={3.1} href='/administrador/registros-edificio'>Registro de expensas</MenuItem>
                             <MenuItem eventKey={3.2} href='/administrador/registros-cobros-expensas'>Registro de cobros</MenuItem>
                             <MenuItem eventKey={3.3} href='/administrador/registros-departamentos'>Registro de departamentos</MenuItem>
-                            <MenuItem eventKey={3.4}>Registro manual de usuarios</MenuItem>
+                            <MenuItem eventKey={3.4} href='/administrador/admin-solicitudes'>Solicitudes</MenuItem>
                             <MenuItem divider />
-                            <MenuItem eventKey={3.5}>Control de usuarios</MenuItem>
+                            <MenuItem eventKey={3.5} href='/administrador/admin-usuarios'>Control de usuarios</MenuItem>
                         </NavDropdown>: 
                         null
                     }
