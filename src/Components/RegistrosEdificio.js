@@ -5,7 +5,7 @@ import _ from 'underscore';
 import firebase from './../Functions/conexion'
 import Firebase from 'firebase'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
-import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table } from 'react-bootstrap';
+import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table , Glyphicon } from 'react-bootstrap';
 
 var db = firebase.database();
 var qExpensas = db.ref("expensas");
@@ -56,7 +56,9 @@ class RegistrosEdificio extends React.Component{
 		return (
 		<div className="RegistrosEdificio">
 			<Row>
-				<Button bsSize="large" bsStyle="primary" onClick={this.abrirModalExp}>Registrar Nuevas Expensas</Button>
+				<Button bsSize="large" bsStyle="primary" onClick={this.abrirModalExp}>
+					Registrar Nuevas Expensas   <Glyphicon glyph='plus'/>
+				</Button>
 			</Row>
 			<h3>Tabla de Expensas</h3>
 			<Table responsive style={{'textAlign':'left'}}>
@@ -92,8 +94,8 @@ class RegistrosEdificio extends React.Component{
 				</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button bsSize="large" bsStyle="primary" onClick={this.registrarExpensas}> Registrar</Button>
-					<Button bsSize="large" bsStyle="danger" onClick={this.cerrarModalExp}>Cerrar</Button>
+					<Button bsStyle="primary" onClick={this.registrarExpensas}>Registrar   <Glyphicon glyph='hdd'/></Button>
+					<Button bsStyle="danger" onClick={this.cerrarModalExp}>Cerrar   <Glyphicon glyph='remove'/></Button>
 				</Modal.Footer>
 			</Modal>
 		</div>

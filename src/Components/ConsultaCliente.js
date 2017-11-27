@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'underscore'
-import { Navbar, NavDropdown, NavItem, Grid, Table } from 'react-bootstrap';
+import { Navbar, NavDropdown, NavItem, Grid, Table, Glyphicon } from 'react-bootstrap';
 import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
 import Link from 'react-router/lib/Link'
@@ -11,7 +11,7 @@ export default class ConsultaCliente extends React.Component{
 	constructor(props){
 		super(props)
 		this.state = {
-			recibosCliente: '',
+			recibosDep: '',
 			idVecino:'', userSavedData: '',
 		}
 	}
@@ -37,23 +37,26 @@ export default class ConsultaCliente extends React.Component{
 			}
         });
 		var idVecino = that.props.params.userId || '' 
+		var idDep = that.props.params.idDep || ''
 		this.setState({
 			idVecino: idVecino,
 		})
-		var recibosCliente = db.ref('recibos').orderByChild('idVecino').equalTo(idVecino)
-		recibosCliente.on('value',(snapshot)=>{
+		var recibosDep = db.ref('recibos').orderByChild('idDep').equalTo(idDep)
+		recibosDep.on('value',(snapshot)=>{
 			this.setState({
-				recibosCliente: snapshot.val()
+				recibosDep: snapshot.val()
 			})
 		})
 	}
 	render(){
 		return(
 			<div className='ClientHome'>
-				<h4>Lista de recibos pagados: {this.state.userSavedData.displayName || 'NoNAME'}</h4>
-				{this.state.recibosCliente === ''?
+				<h3>Lista de recibos pagados: {this.state.userSavedData.displayName || 'NoNAME'}</h3>
+				<h4>Departamento ID: {this.props.params.idDep}</h4>
+				<h3>Seleccione el recibo correspondiente para mas detalle</h3>
+				{this.state.recibosDep === ''?
 					<h4>El cliente no tiene cuentas pagadas</h4>:
-					<TablaRecibos recibosCliente={this.state.recibosCliente} idVecino={this.state.idVecino}/>
+					<TablaRecibos recibosDep={this.state.recibosDep} idDep={this.props.params.idDep} idVecino={this.props.params.userId}/>
 				}
 			</div>
 		)
@@ -64,13 +67,13 @@ class TablaRecibos extends React.Component{
 	constructor(props){
 		super(props)
 		this.state = {
-			recibosCliente: '' 
+			recibosDep: '' 
 		}
 	}
 	componentWillMount(){
 		this.setState({
-			recibosCliente: this.props.recibosCliente || '',
-			idVecino: this.props.idVecino || '',
+			recibosDep: this.props.recibosDep || '',
+			idDep: this.props.idDep || '',
 		})
 	}
 	render(){
@@ -85,14 +88,14 @@ class TablaRecibos extends React.Component{
 						</tr>
 					</thead>
 					<tbody>
-						{_.map(this.state.recibosCliente, (value, key)=>
+						{_.map(this.state.recibosDep, (value, key)=>
 							<tr>
 								<td>{key}</td>
 								<td>{value.fechaRecibo}</td>
 								<td>{value.totalRecibo}</td>
 								<td>
-									<Link to={`/usuario/${this.state.idVecino}/consulta-pagos/${key}/pago-detalle`}>
-										<Button bsStyle='info'>Ir a detalle</Button>
+									<Link to={`/usuario/${this.props.idVecino}/departamentos/${this.state.idDep}/consulta-pagos/${key}/pago-detalle`}>
+										<Button bsStyle='info'>Ir a detalle   <Glyphicon glyph='th-list'/></Button>
 									</Link>
 								</td>
 							</tr>

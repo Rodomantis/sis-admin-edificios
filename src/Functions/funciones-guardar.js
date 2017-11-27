@@ -44,15 +44,15 @@ var funciones = {
 		};
 		myRef.set(datosFactura);
 	},
-	guardarRecibo(id, recibo, total){
-		var fecha = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+	guardarRecibo(fecha, id, recibo, total , idDep){
 		var qRecibo = db.ref("recibos");
 		var myRef = qRecibo.push();
 		var refKey = myRef.key;
 		var datosRecibo = {
 			fechaRecibo: fecha,
 			idVecino: id,
-			totalRecibo: total
+			totalRecibo: total,
+			idDep: idDep
 		};
 		myRef.set(datosRecibo);
 		_.map(recibo, (value, key)=>{
@@ -60,7 +60,12 @@ var funciones = {
 			var pagoRef = qPagos.push()
 			var datosPago = {
 				idRecibo: refKey,
+				fecha: fecha,
+				idDep: idDep,
+				codGastoEd: value.codGastoEd,
 				codExpensa: value.codExpensa,
+				nombre: value.nombre,
+				empresa: value.empresa,
 				costoExpensa: value.costo,
 			}
 			pagoRef.set(datosPago)

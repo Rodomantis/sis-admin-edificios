@@ -5,7 +5,7 @@ import _ from 'underscore';
 import firebase from './../Functions/conexion'
 import Link from 'react-router/lib/Link'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
-import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table} from 'react-bootstrap';
+import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table , Glyphicon} from 'react-bootstrap';
 
 var db = firebase.database();
 var qUsuarios = db.ref("usuarios");
@@ -106,63 +106,19 @@ export default class AdminUsuarios extends React.Component{
 	render(){
 		return(
 			<div className="AdminUs">
+				<h3>Administracion de usuarios</h3>
 				<Row>
 					<Col xs={12} md={4} sm={4} lg={4}>
 					<h4>Buscar Usuario:</h4>
 					<FormControl type="text" name="txtCorreoBuscar" onChange={this.handleBuscarUsuario} placeholder="Buscar correo de usuario" />
-					<Button onClick={this.buscarCorreo}>Buscar</Button>
+					<Button onClick={this.buscarCorreo} bsStyle='warning'>Buscar   <Glyphicon glyph='search'/></Button>
 					</Col>
 				</Row>
 					<h3>Seleccionar Usuario:</h3>
-					{/*<FormControl componentClass="select" onClick={this.handleListaUsuario} multiple style={{"height":"200px"}}>
-						{this.state.correo === ''?
-							_.map(this.state.arrayUsuarios, (value)=>
-								<option>{value.correoUsuario}</option>
-							):
-							_.map(this.state.arrayBusqueda, (value)=>
-								<option>{value.correoUsuario}</option>
-							)
-						}
-					</FormControl>*/}
-					{/*<Button bsStyle="danger" onClick={this.enviarDatosUsuario}>Administrar Usuario</Button>*/}
 					<ListaUsuarios listaUsuarios={this.state.correo===''?
 						this.state.arrayUsuarios:
 						this.state.arrayBusqueda
-					}/>
-					{/*<Link to={`/admin/admin-usuarios/user/${this.state.KeyUs}`}>
-						<Button bsStyle="danger">
-							Administrar Usuario
-						</Button>
-					</Link>*/}
-					{/*<Modal show={this.state.mostrarModalUs} onHide={this.cerrarModalUs}>
-						<Modal.Header closeButton>
-							<Modal.Title>Administrar Usuario</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-						<Label>Correo de Usuario</Label>
-						<FormControl readOnly type="text" name="txtCorreo" value={this.state.corrUs}/>
-						<Label>Nombre</Label>
-						<FormControl readOnly type="text" name="txtNomUs" value={this.state.nomUs}/>
-						<Label>Nivel de Usuario</Label>
-						<FormControl readOnly type="text" name="txtNivelUs" value={this.state.nivelUs+this.state.nomNivel}/>
-						<Label>Nombre de tipo de usuario:</Label>
-						<FormControl readOnly type="text" value={	
-							this.state.nivelUs === 1?
-								"Visitante":
-							this.state.nivelUs === 2?
-								"Usuario":
-							this.state.nivelUs === 3?
-								"Administrador":
-								"Webmaster"
-						}/>
-						<Button onClick={this.subirNivel} bsStyle="warning">Promover</Button>
-						<Button onClick={this.bajarNivel} bsStyle="warning">Rebajar</Button>
-						</Modal.Body>
-						<Modal.Footer>
-						<Button onClick={this.actualizarNivel} bsStyle="success">Guardar Cambios</Button>
-						<Button onClick={this.cerrarModalUs} bsStyle="danger">Cerrar</Button>
-						</Modal.Footer>
-					</Modal>*/}    
+					}/>   
 			</div>
 		);
 	}
@@ -172,10 +128,30 @@ class ListaUsuarios extends React.Component{
 	constructor(props){
 		super(props)
 		this.state ={
-			userList: '',
+			userList: '', userSavedData: ''
 		}
 	}
 	componentWillMount(){
+		var that = this
+		var user = firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+			  	console.log(user.displayName)
+			  	that.setState({
+				  	userId: user.uid || ''
+			  	})
+			  	var userSavedData = firebase.database().ref('usuarios/'+user.uid)
+			  	userSavedData.on('value', function(value){
+				  	console.log('--->', value.val())
+				  	that.setState({
+					    userSavedData: value.val() || '',
+				  	})
+			  	})
+			} else {
+                that.setState({
+                    userSavedData: '',
+                })
+			}
+        });
 		this.setState({
 			userList: this.props.listaUsuarios || '',
 		})
@@ -194,20 +170,85 @@ class ListaUsuarios extends React.Component{
 				</thead>
 				<tbody>
 				{_.map(this.props.listaUsuarios,(value,key)=>
-					<tr>
-						<td>{key}</td>
-						<td>{value.displayName}</td>
-						<td>{value.email}</td>
-						<td>{value.nivel}</td>
-						<td>
-							<Link to={`/administrador/admin-usuarios/${key}/usuario`}>
-								<Button bsStyle='danger'>Administrar</Button>
-							</Link>
-						</td>
-					</tr>
+					<UserEdit usuario={value} usuarioId={key} permission={this.state.userSavedData.nivel}/>
 				)}
 				</tbody>
 			</Table>
+		)
+	}
+}
+
+class UserEdit extends React.Component{
+	constructor(props){
+		super(props)
+		this.state = {
+			usuario: '',
+			usuarioId: '', showModalDelete: false,
+		}
+	}
+	componentWillMount(){
+		var that = this 
+		that.setState({
+			usuario: that.props.usuario || '',
+			usuarioId: that.props.usuarioId || ''
+		})
+	}
+	componentWillReceiveProps(nextProps){
+		if(this.props != nextProps){
+			var that = this 
+			that.setState({
+				usuario: nextProps.usuario || '',
+				usuarioId: nextProps.usuarioId || ''
+			})
+		}
+	}
+	delete=()=>{
+		firebase.database().ref('usuarios').child(this.props.usuarioId).on('value',(snapshot)=>{
+			snapshot.ref.remove()
+		});
+		this.closeModalDelete()
+	}
+	openModalDelete=()=>{
+		this.setState({
+			showModalDelete: true,
+		})
+	}
+	closeModalDelete=()=>{
+		this.setState({
+			showModalDelete: false,
+		})
+	}
+	render(){
+		return(
+			<tr>
+				<td>{this.state.usuarioId}</td>
+				<td>{this.state.usuario.displayName}</td>
+				<td>{this.state.usuario.email}</td>
+				<td>{this.state.usuario.nivel}</td>
+				<td>
+					<Link to={`/administrador/admin-usuarios/${this.state.usuarioId}/usuario`}>
+						<Button bsStyle='info'>Administrar <Glyphicon glyph='user'/></Button>
+					</Link>
+					{this.props.permission >=3?
+						<Button bsStyle='danger' onClick={this.openModalDelete}>Borrar <Glyphicon glyph='trash'/></Button>:
+						null
+					}
+				</td>
+				<Modal show={this.state.showModalDelete} onHide={this.closeModalDelete}>
+					<Modal.Header closeButton>
+						<Modal.Title>Advertencia</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						¿Esta seguro que desea borrar al usuario?
+					</Modal.Body>
+					<Modal.Footer>
+						<ButtonGroup>
+							<Button bsStyle='danger' onClick={this.delete}>Borrar</Button>
+							<Button bsStyle='info' onClick={this.closeModalDelete}>Cancelar</Button>
+						</ButtonGroup>
+					</Modal.Footer>
+				</Modal>
+			</tr>
 		)
 	}
 }

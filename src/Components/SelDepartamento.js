@@ -1,12 +1,12 @@
 import React from 'react';
 import funciones from './../Functions/funciones-guardar';
 import _ from 'underscore';
-import Link from 'react-router/lib/Link'
 import firebase from './../Functions/conexion'
+import Link from 'react-router/lib/Link'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
-import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon } from 'react-bootstrap';
+import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon} from 'react-bootstrap';
 
-export default class ClienteDep extends React.Component{
+export default class SelDepartamento extends React.Component{
     constructor(props){
         super(props)
         this.state = {
@@ -24,9 +24,9 @@ export default class ClienteDep extends React.Component{
     }
     render(){
         return(
-            <div className='ClienteDep'>
+            <div className='SelDepartamento'>
                 <h3>Lista de departamentos registrados de {this.state.usuario.displayName}</h3>
-                <h4>Seleccionar el departamento para consultar los pagos realizados</h4>
+                <h4>Seleccionar un departamento para pagar los servicioa</h4>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
@@ -35,7 +35,7 @@ export default class ClienteDep extends React.Component{
                             <th>Piso</th>
                             <th>Numero</th>
                             <th>Telefono</th>
-                            <th>Consulta</th>
+                            <th>Generar Recibo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,12 +47,9 @@ export default class ClienteDep extends React.Component{
                                 <td>{value.numero}</td>
                                 <td>{value.tel}</td>
                                 <td>
-                                <Link to={`/usuario/${this.props.params.userId}/departamentos/${key}/consulta-pagos/`}>
-                                    <Button bsStyle='info'>Consultar recibos   <Glyphicon glyph='list'/></Button>
-                                </Link>
-                                <Link to={`/usuario/${this.props.params.userId}/departamentos/${key}/pagos-pendientes/`}>
-                                    <Button bsStyle='danger'>Consultar pagos pendientes  <Glyphicon glyph='info-sign'/></Button>
-                                </Link>
+                                    <Link to={`/administrador/registros-cobros-expensas/${this.props.params.userId}/departamentos/${key}/generar-recibo`}>
+                                    <Button bsStyle={'warning'}>Generar Recibo <Glyphicon glyph='pencil'/></Button>
+                                    </Link>
                                 </td>
                             </tr>
                         )}

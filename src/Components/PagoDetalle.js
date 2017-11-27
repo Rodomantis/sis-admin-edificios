@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'underscore'
 import Link from 'react-router/lib/Link'
-import { Navbar, NavDropdown, NavItem, Grid, Table } from 'react-bootstrap';
+import { Navbar, NavDropdown, NavItem, Grid, Table, Glyphicon } from 'react-bootstrap';
 import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
 
@@ -40,7 +40,7 @@ export default class PagoDetalle extends React.Component{
 				<h4>Hacer click en el ID del servicio para ver todos los pagos</h4>
 				{this.state.pagos === ''?
 					<h4>Factura mal detallada, no hay pagos</h4>:
-					<TablaPagos pagos={this.state.pagos} idVecino={this.props.params.userId}/>
+					<TablaPagos pagos={this.state.pagos} idVecino={this.props.params.userId} idDep={this.props.params.idDep}/>
 				}
 			</div>
 		)
@@ -65,6 +65,7 @@ class TablaPagos extends React.Component{
 					<thead>
 						<tr>
 							<th>ID Pago</th>
+							<th>Codigo gasto Edificio</th>
 							<th>Codigo Expensa</th>
 							<th>Monto</th>
 							<th>Pago servicio</th>
@@ -76,11 +77,12 @@ class TablaPagos extends React.Component{
 								<td>
 									{key}
 								</td>
+								<td>{value.codGastoEd || ''}</td>
 								<td>{value.codExpensa}</td>
 								<td>{value.costoExpensa}</td>
 								<td>
-									<Link to={`/usuario/${this.props.idVecino}/detalle-servicio/${value.codExpensa}`}>
-										<Button bsStyle='info'>Historial pago servicio</Button>
+									<Link to={`/usuario/${this.props.idVecino}/departamentos/${this.props.idDep}/detalle-servicio/${value.codExpensa}`}>
+										<Button bsStyle='info'>Historial pago servicio   <Glyphicon glyph='list-alt'/></Button>
 									</Link>
 								</td>
 							</tr>

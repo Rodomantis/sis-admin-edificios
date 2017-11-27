@@ -7,7 +7,7 @@ import browserHistory from 'react-router/lib/browserHistory'
 
 var db = firebase.database();
 
-export default class UserAdmin extends React.Component{
+export default class EditarUsuario extends React.Component{
 	constructor(props){
 		super(props)
 		this.state = {
@@ -43,33 +43,14 @@ export default class UserAdmin extends React.Component{
 			})
 		}
 	}
-	subirNivel =()=>{
-		this.state.nivelUs < 4?
-		this.setState({nivelUs: this.state.nivelUs+1}):
-		this.setState({nivelUs: this.state.nivelUs+0});
-	}
-	bajarNivel =()=>{
-		if(this.state.nivelUs >= 4){
-			alert('No puede quitar rango a un usuario webmaster')
-		}else{
-			this.state.nivelUs > 1?
-			this.setState({nivelUs: this.state.nivelUs-1}):
-			this.setState({nivelUs: this.state.nivelUs-0});
-		}
-	}
 	actualizarNivel=()=>{
-		if(this.state.nivelUs >= 4){
-			alert('No se puede crear un usuario webmaster')
-		}else{
-			var qUsuarios = db.ref('usuarios')
-			qUsuarios.child(this.props.params.userId).update({
-				nivel: this.state.nivelUs,
-				displayName: this.state.displayName || '',
-				photoURL: this.state.photoURL || '',
-			});
-			alert('Datos guardados')
-			browserHistory.goBack()
-		}
+		var qUsuarios = db.ref('usuarios')
+		qUsuarios.child(this.props.params.userId).update({
+			displayName: this.state.displayName || '',
+			photoURL: this.state.photoURL || '',
+		});
+		alert('Datos guardados')
+		browserHistory.goBack()
 	}
 	handleName=(e)=>{this.setState({displayName: e.target.value})}
 	handleImage=(e)=>{this.setState({photoURL: e.target.value})}
@@ -103,8 +84,6 @@ export default class UserAdmin extends React.Component{
 								"Administrador":
 								"Webmaster"
 						}/>
-						<Button onClick={this.subirNivel} bsStyle="warning">Promover   <Glyphicon glyph='arrow-up'/></Button>
-						<Button onClick={this.bajarNivel} bsStyle="warning">Rebajar   <Glyphicon glyph='arrow-down'/></Button>
 					</FormGroup>
 					</Col>
 					<Col xs={0} sm={0} md={3} lg={3}/>

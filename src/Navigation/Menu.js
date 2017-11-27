@@ -54,13 +54,15 @@ export default class Menu extends React.Component{
                 </Navbar.Header>
                 <Navbar.Collapse>
                 <Nav>
-                    <NavItem eventKey={1}><Link to={'/contacto'} style={{'color':'grey'}}>Contacto</Link></NavItem>
+                    <NavDropdown eventKey={1} title="Info" id="basic-nav-dropdown">
+                        <MenuItem eventKey={1.1} href={`/contacto`}>Contacto</MenuItem>
+                    </NavDropdown>
                     {this.state.userSavedData.nivel >= 1?
                         <NavDropdown eventKey={2} title="Usuario" id="basic-nav-dropdown">
-                            <MenuItem eventKey={2.1} href={`/usuario/${this.state.userSavedData.uid}/consulta-pagos`}>Registros de pagos</MenuItem>
-                            <MenuItem eventKey={2.2} href={`/usuario/${this.state.userSavedData.uid}/departamentos`}>Registros Departamentos</MenuItem>
+                            <MenuItem eventKey={2.1} href={`/usuario/${this.state.userSavedData.uid}/departamentos`}>Registros de pagos Realizados</MenuItem>
                             <MenuItem divider />
-                            <MenuItem eventKey={2.3}>Separated link</MenuItem>
+                            <MenuItem eventKey={2.2} href={`/usuario/${this.state.userSavedData.uid}/editar-usuario`}>Editar usuario</MenuItem>
+                            {/*<MenuItem eventKey={2.3} href={`/usuario/${this.state.userSavedData.uid}/foros`}>Foros</MenuItem>*/}
                         </NavDropdown>: 
                         null
                     }
@@ -72,7 +74,16 @@ export default class Menu extends React.Component{
                             <MenuItem eventKey={3.4} href='/administrador/admin-solicitudes'>Solicitudes</MenuItem>
                             <MenuItem divider />
                             <MenuItem eventKey={3.5} href='/administrador/admin-usuarios'>Control de usuarios</MenuItem>
+                            <MenuItem eventKey={3.6} href='/administrador/registros-proveedores'>Registro de proveedores</MenuItem>
+                            <MenuItem eventKey={3.7} href='/administrador/registros-gastos'>Registro de gastos</MenuItem>
+                            <MenuItem eventKey={3.8} href='/administrador/pagos-empleados'>Pagos a empleados</MenuItem>
                         </NavDropdown>: 
+                        null
+                    }
+                    {this.state.userSavedData.nivel >= 1?
+                        <NavDropdown eventKey={4} title="Foros" id="basic-nav-dropdown">
+                            <MenuItem eventKey={4.1} href={`/foros/discusiones`}>Lista discusiones</MenuItem>
+                        </NavDropdown>:
                         null
                     }
                 </Nav>
@@ -82,7 +93,7 @@ export default class Menu extends React.Component{
 						<Link style={{'color':'white'}} to="/Login">Iniciar Sesion </Link>:
 						<Row>
 							<a onClick={this.logout} style={{'color':'white'}}>Cerrar Sesion </a>
-							<Image src={this.state.userSavedData.photoURL} circle style={{'width':'30px','height':'30px'}}/>
+							<Image src={this.state.userSavedData.photoURL || "https://myspace.com/common/images/user.png"} circle style={{'width':'30px','height':'30px'}}/>
 						</Row>
                     }
                     </MenuItem>

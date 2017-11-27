@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, NavDropdown, NavItem, Grid } from 'react-bootstrap';
+import { Navbar, NavDropdown, NavItem, Grid, Glyphicon} from 'react-bootstrap';
 import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
 import browserHistory from 'react-router/lib/browserHistory'
@@ -70,7 +70,7 @@ export default class Solicitations extends React.Component{
                             <div>
                                 <h3>Su usuario no esta registrado en la base de datos</h3>
                                 <h4>Para registrarse debe enviar sus datos a un administrador para activar su cuenta</h4>
-                                <Button bsStyle='info' onClick={this.sendSolicitation}>Enviar solicitud</Button>
+                                <Button bsStyle='info' bsSize="large" onClick={this.sendSolicitation}>Enviar solicitud   <Glyphicon glyph='inbox'/></Button>
                             </div>
                         }
                     </div>

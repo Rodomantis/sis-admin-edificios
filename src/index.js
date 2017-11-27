@@ -8,16 +8,28 @@ import Info from './Components/Info'
 import Home from './Components/Home'
 import ConsultaCliente from './Components/ConsultaCliente'
 import RegistroDep from './Components/RegistroDep'
+import RegistroGastos from './Components/RegistroGastos'
+import EditarUsuario from './Components/EditarUsuario'
+import RegistroProveedor from './Components/RegistroProveedor'
+import SelDepartamento from './Components/SelDepartamento'
 import ClienteDep from './Components/ClienteDep'
+import DetallePagoEmpleado from './Components/DetallePagoEmpleado'
+import PagosEmpleado from './Components/PagosEmpleado'
+import RegGastosEdificio from './Components/RegGastosEdificio'
 import AdminUsuarios from './Components/AdminUsuarios'
+import PagosPendientes from './Components/PagosPendientes'
+import CrearUsuario from './Components/CrearUsuario'
 import UserAdmin from './Components/UserAdmin'
+import Discusion from './Components/Discusion'
 import PagoDetalle from './Components/PagoDetalle'
 import DetalleServicio from './Components/DetalleServicio'
 import UserHome from './Navigation/UserHome'
 import Solicitations from './Components/Solicitations'
 import SolicitationAdmin from './Components/SolicitationAdmin'
 import SisLogin from './Components/SisLogin'
+import Foros from './Components/Foros'
 import AdminHome from './Navigation/AdminHome'
+import ForosHome from './Navigation/ForosHome'
 import RegistrosEdificio from './Components/RegistrosEdificio'
 import RegistrosCobros from './Components/RegistroCobros'
 import GenerarRecibo from './Components/GenerarRecibo'
@@ -34,21 +46,34 @@ ReactDOM.render(
             <IndexRoute component={Home} />
             <Route path="/administrador" component={AdminHome}>
                 <Route path="registros-departamentos" components={RegistroDep} />
+                <Route path="registros-proveedores" components={RegistroProveedor} />
+                <Route path="registros-gastos" components={RegistroGastos} />
+                <Route path="registros-gastos/registro" components={RegGastosEdificio} />
                 <Route path="registros-edificio" components={RegistrosEdificio} />
                 <Route path="registros-cobros-expensas" components={RegistrosCobros} />
-                <Route path="registros-cobros-expensas/:userId/generar-recibo" components={GenerarRecibo} />
+                <Route path="registros-cobros-expensas/:userId/departamentos" components={SelDepartamento} />
+                <Route path="registros-cobros-expensas/:userId/departamentos/:idDepartamento/generar-recibo" components={GenerarRecibo} />
                 <Route path="admin-usuarios" components={AdminUsuarios} />
                 <Route path="admin-usuarios/:userId/usuario" components={UserAdmin} />
                 <Route path="admin-solicitudes" components={SolicitationAdmin}/>
+                <Route path="pagos-empleados" components={PagosEmpleado}/>
+                <Route path="pagos-empleados/generar-pago/:idEmpleado" components={DetallePagoEmpleado}/>
             </Route>
             <Route path="/usuario/:userId" component={UserHome}>
-                <Route path="consulta-pagos" components={ConsultaCliente} />
-                <Route path="consulta-pagos/:idRecibo/pago-detalle" components={PagoDetalle}/>
-                <Route path="detalle-servicio/:idServicio" components={DetalleServicio} />
+                <Route path="departamentos/:idDep/consulta-pagos" components={ConsultaCliente} />
+                <Route path="departamentos/:idDep/consulta-pagos/:idRecibo/pago-detalle" components={PagoDetalle}/>
+                <Route path="departamentos/:idDep/detalle-servicio/:idServicio" components={DetalleServicio} />
+                <Route path="departamentos/:idDep/pagos-pendientes" components={PagosPendientes} />
                 <Route path="departamentos" components={ClienteDep} />
+                <Route path="editar-usuario" components={EditarUsuario}/>
+            </Route>
+            <Route path="/foros" component={ForosHome}>
+                <Route path="discusiones" components={Foros} />
+                <Route path="discusiones/:discusionId" components={Discusion} />
             </Route>
             <Route path="/login" component={SisLogin}/>
             <Route path="/solicitudes" component={Solicitations}/>
+            <Route path="/crear-usuario" component={CrearUsuario}/>
             <Route path="/contacto" component={Info}/>
             <Route path="*" component={NoMatch}/>
         </Route>

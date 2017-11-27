@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'underscore'
+import Link from 'react-router/lib/Link'
 import { Grid, Table } from 'react-bootstrap';
 import { Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
@@ -16,7 +17,7 @@ export default class DetalleServicio extends React.Component{
     componentWillMount(){
         var that = this
         var llavesRecibos = []
-        firebase.database().ref('recibos').orderByChild('idVecino').equalTo(this.props.params.userId).on('value',(recSnapshot)=>{
+        firebase.database().ref('recibos').orderByChild('idDep').equalTo(this.props.params.idDep).on('value',(recSnapshot)=>{
             var recibos = recSnapshot.val()
             console.log(recibos)
             var llavesRecibos = []
@@ -43,19 +44,23 @@ export default class DetalleServicio extends React.Component{
         return(
             <div className='DetalleServicio'>
                 <h4>Pagos del servicio <b>{this.state.expensa.nombreExpensa}</b> de la empresa <b>{this.state.expensa.empresaProv}</b></h4>
-                <h4>Usuario: <b>{this.props.params.userId}</b></h4>
+                <h4>Usuario: <b>{this.props.params.userId}</b> Departamento: <b>{this.props.params.idDep}</b></h4>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Id recibo</th>
+                            <th>Fecha de pago</th>
                             <th>Monto</th>
                         </tr>
                     </thead>
                     <tbody>
                         {_.map(this.state.pagosExpensa,(value,key)=>
                             <tr>
-                                <td>{key}</td>
-                                <td>{value.costoExpensa}</td>
+                                <td>{key || ''}</td>
+                                <td>{value.idRecibo || ''}</td>
+                                <td>{value.fecha || ''}</td>
+                                <td>{value.costoExpensa || ''}</td>
                             </tr>
                         )}
                     </tbody>

@@ -3,7 +3,7 @@ import _ from 'underscore'
 import firebase from './../Functions/conexion';
 import funciones from './../Functions/funciones-guardar';
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
-import { Grid, Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table } from 'react-bootstrap';
+import { Grid, Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon } from 'react-bootstrap';
 import Estilos from './../Styles/estilos-react';
 import { browserHistory } from 'react-router';
 //import MasterCont from './master.react';
@@ -120,17 +120,20 @@ class SisLogin extends React.Component{
 						{this.state.userSavedData.nivel <=4?
 						<h4>Usuario comprobado, ya puede ingresar a la pagina</h4>:
 						<div>
-							<ButtonGroup vertical>
-								<Button bsSize="large" onClick={this.loginWithGoogle} bsStyle="danger">Login con Google</Button>
-								<Button bsSize="large" onClick={this.loginWithFacebook} bsStyle="primary">Login con Facebook</Button>
-								<Button bsSize="large" onClick={this.loginWithTwitter} bsStyle="info">Login con Twitter</Button>
-							</ButtonGroup>
+							<h3>Ingreso al sistema</h3>
+							<h4>Para ingresar al sistema puede conectarse mediante una de estas redes sociales</h4>
+							<Button bsSize="large" onClick={this.loginWithGoogle} bsStyle="danger">Login con Google   <i className="fa fa-google-plus-square"/></Button>
+							<Button bsSize="large" onClick={this.loginWithFacebook} bsStyle="primary">Login con Facebook   <i className="fa fa-facebook-official"/></Button>
+							<Button bsSize="large" onClick={this.loginWithTwitter} bsStyle="info">Login con Twitter   <i className="fa fa-twitter"/></Button>
+							<h4>Ingresar con un usuario registrado</h4>
+							<Login />
 							{this.state.userData == ''?
 								null:
 								<div>
-									<h4>Para solicitar la habilitacion de su correo por favor ingresar a habilitaciones</h4>
-									<Link to='solicitudes'>
-										<Button bsStyle='info'>Solicitudes</Button>
+									<h3>Su usuario ya esta registrado pero no esta habilitado</h3>
+									<h4>Para solicitar la habilitacion de su correo por favor ingresar a solicitud de habilitacion</h4>
+									<Link to='/solicitudes'>
+										<Button bsStyle='info' bsSize="large">Solicitudes   <Glyphicon glyph='info-sign'/></Button>
 									</Link>
 								</div>
 							}
@@ -151,24 +154,45 @@ class Login extends SisLogin{
 		super()
 		//call super to run parent's constructor
 		this.state = {
-			user:'',
-			pass:'',
+			email:'',
+			password:'',
+			noUser: '',
 		};
 	}
-	handleTextUser=(e)=>{this.setState({user: e.target.value,});}
-	handleTextPass=(e)=>{this.setState({pass: e.target.value,});}
-	
+	handleTextUser=(e)=>{this.setState({email: e.target.value,});}
+	handleTextPass=(e)=>{this.setState({password: e.target.value,});}
+	loginUser=()=>{
+		var that = this
+		firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// ...
+			that.setState({
+				noUser: 'Error al ingresar el usuario no esta registrado',
+			})
+		});
+	}
 	render(){
 		return (
 			<Row>
 				<Col xs={0} md={0} sm={4} lg={4}/>
 				<Col xs={12} md={12} sm={4} lg={4}>
-				<div style={{'borderRadius':'8px','backgroundColor':'black','color':'white','opacity':'0.9'}}>
-						<h4>Acceso al sistema de ventas y cotizaciones</h4>
-						<FormControl type="text" onChange={this.handleTextPass} placeholder="Nombre usuario" />
-						<FormControl type="password" onChange={this.handleTextUser} placeholder="Password" />
-						<Button bsStyle="info">Ingresar</Button>
+				<div style={{'borderRadius':'8px','backgroundColor':'#5bc0de','color':'white','opacity':'0.9'}}>
+						<h4>Acceso mediante usuario</h4>
+						<FormControl type="email" onChange={this.handleTextUser} placeholder="Correo usuario" />
+						<FormControl type="password" onChange={this.handleTextPass} placeholder="Password" />
+						<Button bsStyle="primary" onClick={this.loginUser}>Ingresar  <Glyphicon glyph='user'/></Button>
 				</div>
+				{this.state.noUser === ''?
+					null:
+					<div>
+						<h4>{this.state.noUser}</h4>
+						<Link to='/crear-usuario'>
+							<Button bsStyle='warning'>Crear Usuario</Button>
+						</Link>
+					</div>
+				}
 				</Col>
 				<Col xs={0} md={0} sm={4} lg={4}/>
 			</Row>

@@ -4,7 +4,7 @@ import firebase from './../Functions/conexion'
 import {Link} from 'react-router'
 import { Navbar, NavDropdown, NavItem, Grid, Panel, FormControl, ListGroup, ListGroupItem} from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown'
-import { Jumbotron, Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
+import { Jumbotron, Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image, Glyphicon } from 'react-bootstrap';
 
 var db = firebase.database()
 
@@ -67,15 +67,25 @@ export default class Home extends Component {
                         <ListGroup>
                             <ListGroupItem>  
                                 <h2>Bienvenido usuario: </h2>
-                                <h2>{this.state.userSavedData.displayName || 'Invitado'}</h2>
+                                <h3>{this.state.userSavedData.displayName || 'Invitado'}</h3>
                                 <h4>Acceda a la función que desee utilizar</h4>
                             </ListGroupItem>
-                                {this.state.userSavedData !== ""?
+                            <ListGroupItem>
+                                <h2>Mensaje del administrador</h2>
+                                <Row>
+                                    <Col xs={0} sm={0} md={3} lg={3}/>
+                                    <Col xs={12} sm={12} md={6} lg={6}>
+                                        <ReactMarkdown source={this.state.msgAdminData}/>
+                                    </Col>
+                                    <Col xs={0} sm={0} md={3} lg={3}/>
+                                </Row>
+                            </ListGroupItem>
+                            {this.state.userSavedData.nivel >= 3?
                                 <ListGroupItem>
                                     <Button bsStyle="warning" 
                                     onClick={()=>{this.setState({editarBienvenida: !this.state.editarBienvenida})}}
                                     >
-                                    Editar Bienvenida
+                                    Editar Bienvenida   <Glyphicon glyph='pencil'/>
                                     </Button>
                                     <Panel collapsible expanded={this.state.editarBienvenida}>
                                         <Row>
@@ -103,21 +113,11 @@ export default class Home extends Component {
                                     <ListGroupItem>
                                         <h3>Por favor confirmar usuario para acceder a la pagina</h3>
                                         <Link to='/login'>
-                                            <Button bsStyle='info'>Ingresar</Button>
+                                            <Button bsStyle='info'>Ingresar   <Glyphicon glyph='user'/></Button>
                                         </Link>
                                     </ListGroupItem>:
                                     null
                                 }
-                            <ListGroupItem>
-                                <h2>Mensaje del administrador</h2>
-                                <Row>
-                                    <Col xs={0} sm={0} md={3} lg={3}/>
-                                    <Col xs={12} sm={12} md={6} lg={6}>
-                                        <ReactMarkdown source={this.state.msgAdminData}/>
-                                    </Col>
-                                    <Col xs={0} sm={0} md={3} lg={3}/>
-                                </Row>
-                            </ListGroupItem>
                         </ListGroup>
                     </div>
                 </Col>

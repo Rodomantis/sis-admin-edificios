@@ -10,7 +10,13 @@ export default class Info extends React.Component{
                 <Row>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         <h3>Dirección</h3>
-                        <Image responsive src="http://new.ucatec.edu.bo/ucatec/img/mapucatecstatic.png" rounded />
+                        <Row>
+                            <Col xs={0} sm={0} md={3} lg={3}/>
+                            <Col xs={12} sm={12} md={6} lg={6}>
+                            <Image responsive src="http://new.ucatec.edu.bo/ucatec/img/mapucatecstatic.png" rounded />
+                            </Col>
+                            <Col xs={0} sm={0} md={3} lg={3}/>
+                        </Row>
                     </Col>
                     <Col xs={12} sm={12} md={6} lg={6}>
                         <h3>Contacto</h3>

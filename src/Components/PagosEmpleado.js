@@ -8,10 +8,8 @@ import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Mo
 import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon } from 'react-bootstrap';
 
 var db = firebase.database();
-var qVecinos = db.ref("vecinos");
-var qExpensas = db.ref("expensas");
 
-class RegistroCobros extends React.Component{
+class PagosEmpleado extends React.Component{
 	constructor(props){
 		super(props)
 		this.state={
@@ -23,7 +21,9 @@ class RegistroCobros extends React.Component{
 		var usuarios = firebase.database().ref('usuarios')
 		usuarios.on('value',(snapshot)=>{
 			that.setState({
-				usuarios: snapshot.val()
+                usuarios: _.pick(snapshot.val(),(value,key)=>
+                    value.nivel >= 2
+                )
 			})
 		})
 	}
@@ -35,7 +35,7 @@ class RegistroCobros extends React.Component{
 			}),
 		});
 	}
-	handleBuscarVecino=(e)=>{
+	handleBuscar=(e)=>{
 		this.setState({
 			buscarNombre: e.target.value
 		},()=>{this.buscarPorNombre();})
@@ -43,21 +43,22 @@ class RegistroCobros extends React.Component{
 	render(){
 		return(
 			<div className='RegistroCobros'>
-				<h3>Modulo de generacion de recibos</h3>
+				<h3>Modulo de pagos de empleado</h3>
 				<h4>Seleccionar Vecino para generar recibo</h4>
 				<ControlLabel>Buscar Vecino</ControlLabel>
 				<FormControl
 					type="text"
 					value={this.state.buscarNombre}
-					placeholder="Ingresar nombre vecino"
-					onChange={this.handleBuscarVecino}
+					placeholder="Ingresar nombre del Empleado"
+					onChange={this.handleBuscar}
 				/>
-				<h4>Tabla de usuarios</h4>
+				<h4>Tabla de Empleados</h4>
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>Vecino</th>
+							<th>Empleado</th>
+                            <th>Nivel</th>
 							<th>Correo</th>
 							<th>Accion</th>
 						</tr>
@@ -65,57 +66,64 @@ class RegistroCobros extends React.Component{
 					<tbody>
 					{this.state.arrayBuscar === ''?
 						_.map(this.state.usuarios,(value,key)=>
-							<SeleccionVecino vecino={value} idVecino={key}/>
+							<SeleccionUsuario usuario={value} idUsuario={key}/>
 						):
 						_.map(this.state.arrayBuscar,(value,key)=>
-							<SeleccionVecino vecino={value} idVecino={key}/>
+							<SeleccionUsuario usuario={value} idUsuario={key}/>
 						)
 					}
 					</tbody>
 				</Table>
-				{}
 			</div>
 		)
 	}
 }
 
-class SeleccionVecino extends React.Component{
+class SeleccionUsuario extends React.Component{
 	constructor(props){
 		super(props)
 		this.state={
-			vecino: '',
-			idVecino: '',
+			usuario: '',
+			idUsuario: '',
 		}
 	}
 	componentWillMount(){
 		var that = this
 		that.setState({
-			vecino: that.props.vecino || '',
-			idVecino: that.props.idVecino || '',
+			usuario: that.props.usuario || '',
+			idUsuario: that.props.idUsuario || '',
 		})
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props != nextProps){
 			var that = this
 			that.setState({
-				vecino: nextProps.vecino || '',
-				idVecino: nextProps.idVecino || '',
+				usuario: nextProps.usuario || '',
+				idUsuario: nextProps.idUsuario || '',
 			})
 		}
 	}
 	render(){
 		return(
 			<tr>
-				<td>{this.state.idVecino}</td>
+				<td>{this.state.idUsuario}</td>
 				<td>
-					{this.state.vecino.displayName || this.state.vecino.nombreUsuario}
+					{this.state.usuario.displayName || this.state.usuario.nombreUsuario}
+				</td>
+                <td>
+                    {this.state.usuario.nivel == 4?
+                        'Administrador':
+                    this.state.usuario.nivel == 3? 
+                        'Encargado':
+                        'Empleado'                   
+                    }
 				</td>
 				<td>
-					{this.state.vecino.email || this.state.vecino.correoUsuario || ''}
+					{this.state.usuario.email || this.state.usuario.correoUsuario || ''}
 				</td>
 				<td>
-					<Link to={`/administrador/registros-cobros-expensas/${this.state.idVecino}/departamentos`}>
-						<Button bsStyle={'info'}>Seleccionar Departamento  <Glyphicon glyph='list'/></Button>
+					<Link to={`/administrador/pagos-empleados/generar-pago/${this.state.idUsuario}/`}>
+						<Button bsStyle={'info'}>Generar Pago <Glyphicon glyph='list'/></Button>
 					</Link>
 				</td>
 			</tr>
@@ -123,4 +131,4 @@ class SeleccionVecino extends React.Component{
 	}
 }
 
-export default RegistroCobros
+export default PagosEmpleado

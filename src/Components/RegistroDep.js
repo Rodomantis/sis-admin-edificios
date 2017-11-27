@@ -3,7 +3,7 @@ import funciones from './../Functions/funciones-guardar';
 import _ from 'underscore';
 import firebase from './../Functions/conexion'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
-import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table } from 'react-bootstrap';
+import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon} from 'react-bootstrap';
 
 export default class RegistroDep extends React.Component{
     constructor(props){
@@ -51,9 +51,26 @@ export default class RegistroDep extends React.Component{
         })
     }
     handleName =(e)=>{this.setState({name: e.target.value})}
-    handleFloor =(e)=>{this.setState({floor: e.target.value})}
-    handleNumber =(e)=>{this.setState({number: e.target.value})}
-    handleTel =(e)=>{this.setState({tel: e.target.value})}
+    handleFloor =(e)=>{
+        const re = /^[0-9\b]+$/
+        if (e.target.value == '' || re.test(e.target.value)) {
+            this.setState({
+                floor: Number(e.target.value)
+            })
+        }
+    }
+    handleNumber =(e)=>{
+        const re = /^[0-9\b]+$/
+        if (e.target.value == '' || re.test(e.target.value)) {
+            this.setState({number: Number(e.target.value)})
+        }
+    }
+    handleTel =(e)=>{
+        const re = /^[0-9\b]+$/
+        if (e.target.value == '' || re.test(e.target.value)) {
+            this.setState({tel: Number(e.target.value)})
+        }
+    }
     render(){
         return(
             <div className='RegisterDep'>
@@ -63,7 +80,7 @@ export default class RegistroDep extends React.Component{
                         openModalDep: true
                     })
                 }
-                }>Registrar Departamento</Button>
+                }>Registrar Departamento   <Glyphicon glyph='plus'/></Button>
                 <h3>Lista de departamentos</h3>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
@@ -74,18 +91,12 @@ export default class RegistroDep extends React.Component{
                             <th>Piso</th>
                             <th>Numero</th>
                             <th>Telefono</th>
+                            <th>Funcion</th>
                         </tr>
                     </thead>
                     <tbody>
                         {_.map(this.state.departamentos,(value,key)=>
-                            <tr>
-                                <td>{key}</td>
-                                <td>{value.propietario}</td>
-                                <td>{value.nombreEdificio}</td>
-                                <td>{value.piso}</td>
-                                <td>{value.numero}</td>
-                                <td>{value.tel}</td>
-                            </tr>
+                            <Departamento departamento={value} departamentoId={key}/>
                         )}
                     </tbody>
                 </Table>
@@ -122,6 +133,75 @@ export default class RegistroDep extends React.Component{
                     </Modal.Footer>
                 </Modal>
             </div>
+        )
+    }
+}
+
+class Departamento extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            departamento:'',
+            departamentoId:'', showModalDelete: false,
+        }
+    }
+    componentWillMount(){
+        var that = this
+        that.setState({
+            departamento: that.props.departamento ||'',
+            departamentoId: that.props.departamentoId || '',
+        })
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props != nextProps){
+            var that = this
+            that.setState({
+                departamento: nextProps.departamento ||'',
+                departamentoId: nextProps.departamentoId || '',
+            })
+        }
+    }
+    delete=()=>{
+		firebase.database().ref('departamentos').child(this.props.departamentoId).on('value',(snapshot)=>{
+			snapshot.ref.remove()
+		});
+		this.closeModalDelete()
+	}
+	openModalDelete=()=>{
+		this.setState({
+			showModalDelete: true,
+		})
+	}
+	closeModalDelete=()=>{
+		this.setState({
+			showModalDelete: false,
+		})
+	}
+    render(){
+        return(
+            <tr>
+                <td>{this.state.departamentoId}</td>
+                <td>{this.state.departamento.propietario}</td>
+                <td>{this.state.departamento.nombreEdificio}</td>
+                <td>{this.state.departamento.piso}</td>
+                <td>{this.state.departamento.numero}</td>
+                <td>{this.state.departamento.tel}</td>
+                <td><Button bsStyle='danger' onClick={this.openModalDelete}>Borrar  <Glyphicon glyph='trash'/></Button></td>
+                <Modal show={this.state.showModalDelete} onHide={this.closeModalDelete}>
+					<Modal.Header closeButton>
+						<Modal.Title>Advertencia</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						¿Esta seguro que desea borrar el departamento?
+					</Modal.Body>
+					<Modal.Footer>
+						<ButtonGroup>
+							<Button bsStyle='danger' onClick={this.delete}>Borrar</Button>
+							<Button bsStyle='info' onClick={this.closeModalDelete}>Cancelar</Button>
+						</ButtonGroup>
+					</Modal.Footer>
+				</Modal>
+            </tr>
         )
     }
 }
