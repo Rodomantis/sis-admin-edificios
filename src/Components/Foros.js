@@ -52,7 +52,8 @@ export default class Foros extends React.Component{
                 <Panel collapsible expanded={this.state.crearDiscusion}>
                     <ForosForm cerrarDiscusion={this.cerrarDiscusion} />
                 </Panel>
-                <h4>Lista de discusiones</h4>
+                <h3>LISTA DE DISCUSIONES</h3>
+                <h4>Puede crear temas para discuciones del edificio</h4>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
@@ -64,7 +65,7 @@ export default class Foros extends React.Component{
                     </thead>
                     <tbody>
                         {_.map(this.state.discusiones,(value,key)=>
-                            <EditarDiscusion discusion={value} discusionId={key} nivel={this.state.userSavedData.nivel}/>
+                            <EditarDiscusion discusion={value} discusionId={key} nivel={this.state.userSavedData.nivel} uid={this.state.userSavedData.uid}/>
                         )}
                     </tbody>
                 </Table>
@@ -124,7 +125,7 @@ class EditarDiscusion extends React.Component{
                     <Link to={`/foros/discusiones/${this.state.discusionId}`}>
                         <Button bsStyle='info'>Acceder  <Glyphicon glyph='list'/></Button>
                     </Link>
-                    {this.props.nivel >= 3?
+                    {this.props.nivel >= 3 || this.props.uid == this.state.discusion.creatorId?
                         <Button bsStyle='danger' onClick={this.openDelModal}>Borrar  <Glyphicon glyph='remove-sign'/></Button>:
                         null
                     }

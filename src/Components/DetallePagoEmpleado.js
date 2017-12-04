@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 import funciones from './../Functions/funciones-guardar';
 import _ from 'underscore';
 import firebase from './../Functions/conexion'
@@ -17,7 +18,8 @@ export default class DetallePagoEmpleado extends React.Component{
             descuentos: '',
             empleado:'',
             name:'', email:'', pago:0, fecha: moment().format(),
-            descuentos: 0, date: moment(),
+            descuentos: 0, date: moment(), discountList:[],
+            discountName: '', discountAmount: 0,
         }
     }
     componentWillMount(){
@@ -34,6 +36,7 @@ export default class DetallePagoEmpleado extends React.Component{
     guardarPago=()=>{
         if(this.state.pago !== 0){
             var pago = firebase.database().ref('pagosEmpleados').push()
+            var pagoKey = pago.key
             var data = {
                 idEmpleado: this.props.params.idEmpleado,
                 nombre: this.state.empleado.displayName,
@@ -43,14 +46,42 @@ export default class DetallePagoEmpleado extends React.Component{
                 correo: this.state.empleado.email || '',
             }
             pago.set(data)
+            _.map(this.state.discountList, (value,key)=>{
+                var descuento = firebase.database().ref('descuentos').push()
+                var datosDescuento = {
+                    discountName: value.discountName,
+                    discountAmount: value.discountAmount,
+                    idPagoEmpleado: pagoKey,
+                }
+                descuento.set(datosDescuento)
+            })
+            window.location.reload()
         }else{
             alert('Debe ingresar al menos el sueldo')
         }
+    }
+    addDiscount=()=>{
+        var data = {
+            discountName: this.state.discountName,
+            discountAmount: this.state.discountAmount,
+        }
+        var discountList = this.state.discountList
+        discountList.push(data)
+        this.setState({discountList: discountList})
+        this.sumarDescuentos()
+        ReactDOM.findDOMNode(this.refs.refDiscount).focus()
     }
     handlePay=(e)=>{
         const re = /^[0-9\b]+$/
         if (e.target.value == '' || re.test(e.target.value)) {
             this.setState({pago: Number(e.target.value) || 0})
+        }
+    }
+    handleDiscount=(e)=>{this.setState({discountName: e.target.value})}
+    handleDiscountAmount=(e)=>{
+        const re = /^[0-9\b]+$/
+        if (e.target.value == '' || re.test(e.target.value)) {
+            this.setState({discountAmount: Number(e.target.value) || 0})
         }
     }
     handleDate=(date)=>{
@@ -63,16 +94,52 @@ export default class DetallePagoEmpleado extends React.Component{
             })
         });
     }
+    deleteElement=(index)=>{
+		var array = this.state.discountList;
+		array.splice(index, 1);
+		this.setState({discountList: array });
+		this.sumarDescuentos()
+    } 
+    sumarDescuentos=()=>{
+		var totalDesc = 0
+		_.map(this.state.discountList,value=>{
+			totalDesc = totalDesc + value.discountAmount
+		})
+		this.setState({descuentos: totalDesc || 0})
+	}
     render(){
         return(
             <div className='RegisterDep'>
+                <h3>Lista de pagos a empleados</h3>
+                <div style={{'height': '200px', 'overflowY': 'scroll'}}>
+                    <Table responsive style={{'textAlign':'left'}}>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ID Empleado</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Monto Pago</th>
+                                <th>Fecha Pago</th>
+                                <th>Descuentos</th>
+                                <th>Funcion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {_.map(this.state.pagosEmpleados,(value,key)=>
+                                <PagoEmp pago={value} pagoId={key}/>
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
                 <Row>
                     <Col xs={12} sm={12} md={6} lg={6}>
-                        <Label>Nombre</Label>
+                        <h3>Registro de pago a empleado</h3>
+                        <Label className='pull-left'>Nombre</Label>
                         <FormControl type="text" value={this.state.empleado.displayName} readOnly />
-                        <Label>Correo</Label>
+                        <Label className='pull-left'>Correo</Label>
                         <FormControl type="email" value={this.state.empleado.email} readOnly />
-                        <Label>Monto</Label>
+                        <Label className='pull-left'>Monto</Label>
                         <FormControl type="text" value={this.state.pago} onChange={this.handlePay} />
                         <Label>Fecha</Label>
                         <DatePicker
@@ -85,31 +152,45 @@ export default class DetallePagoEmpleado extends React.Component{
                             timeIntervals={30}
                             dateFormat="YYYY/MM/DD"
                         />
-                        <div style={{'paddingTop': '5px'}}>
-                            <Button  bsStyle='danger' onClick={this.guardarPago}>Guardar Pago   <Glyphicon glyph='hdd'/></Button>
+                    </Col>
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                        <h3>Añadir descuento</h3>
+                        <Label className='pull-left'>Motivo descuento</Label>
+                        <FormControl type="text" value={this.state.discountName} 
+                        onChange={this.handleDiscount} ref='refDiscount' />
+                        <Label className='pull-left'>Monto descuento</Label>
+                        <FormControl type="text" value={this.state.discountAmount} onChange={this.handleDiscountAmount} />
+                        <Button bsStyle='warning' onClick={this.addDiscount}>Añadir   <Glyphicon glyph='plus'/></Button>
+                        <div style={{'height': '200px', 'overflowY': 'scroll'}}>
+                            <Table responsive style={{'textAlign':'left'}}>
+                                <thead>
+                                    <tr>
+                                        <th>Motivo</th>
+                                        <th>Descuento</th>
+                                        <th>Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {_.map(this.state.discountList,(value,key)=>
+                                    <tr>
+                                        <td>{value.discountName}</td>
+                                        <td>{value.discountAmount}</td>
+                                        <td>
+                                            <Button bsStyle='danger' onClick={()=>{
+                                                this.deleteElement(key)
+                                            }}
+                                            ><Glyphicon glyph='minus'/></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
                         </div>
                     </Col>
                 </Row>
-                <h3>Lista de pagos a empleados</h3>
-                <Table responsive style={{'textAlign':'left'}}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>ID Empleado</th>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Monto Pago</th>
-                            <th>Fecha Pago</th>
-                            <th>Descuentos</th>
-                            <th>Funcion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {_.map(this.state.pagosEmpleados,(value,key)=>
-                            <PagoEmp pago={value} pagoId={key}/>
-                        )}
-                    </tbody>
-                </Table>
+                <div style={{'paddingTop': '5px'}}>
+                    <Button  bsStyle='danger' onClick={this.guardarPago}>Guardar Pago   <Glyphicon glyph='hdd'/></Button>
+                </div>
             </div>
         )
     }

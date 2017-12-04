@@ -17,27 +17,10 @@ export default class DetalleServicio extends React.Component{
     componentWillMount(){
         var that = this
         var llavesRecibos = []
-        firebase.database().ref('recibos').orderByChild('idDep').equalTo(this.props.params.idDep).on('value',(recSnapshot)=>{
-            var recibos = recSnapshot.val()
-            console.log(recibos)
-            var llavesRecibos = []
-            _.map(recibos,(rec, keyRec)=>{
-                llavesRecibos = llavesRecibos.concat(keyRec)
+        firebase.database().ref('gastosExpensas').orderByChild('codGasto').equalTo(this.props.params.idServicio).on('value',(snapshot)=>{
+            that.setState({
+                pagosExpensa: snapshot.val()
             })
-            console.log(llavesRecibos)
-            firebase.database().ref('pagos').orderByChild('codExpensa').equalTo(this.props.params.idServicio).on('value',(snapshot)=>{
-                console.log(snapshot.val())
-                var pagosExpensa = _.pick(snapshot.val(), (pago)=>{
-                    return _.contains(llavesRecibos, pago.idRecibo)
-                })
-                console.log(pagosExpensa)
-                that.setState({
-                    pagosExpensa: pagosExpensa
-                })
-            })
-        })
-        firebase.database().ref('expensas').child(this.props.params.idServicio).on('value',(snapshot)=>{
-            that.setState({expensa: snapshot.val() || ''})
         })
     }
     render(){
@@ -49,18 +32,18 @@ export default class DetalleServicio extends React.Component{
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Id recibo</th>
-                            <th>Fecha de pago</th>
-                            <th>Monto</th>
+                            <th>Cod Expensa</th>
+                            <th>Expensa</th>
+                            <th>Empresa</th>
                         </tr>
                     </thead>
                     <tbody>
                         {_.map(this.state.pagosExpensa,(value,key)=>
                             <tr>
                                 <td>{key || ''}</td>
-                                <td>{value.idRecibo || ''}</td>
-                                <td>{value.fecha || ''}</td>
-                                <td>{value.costoExpensa || ''}</td>
+                                <td>{value.codExpensa || ''}</td>
+                                <td>{value.nombreExpensa || ''}</td>
+                                <td>{value.empresaProv || ''}</td>
                             </tr>
                         )}
                     </tbody>

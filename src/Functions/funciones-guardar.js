@@ -71,8 +71,8 @@ var funciones = {
 			pagoRef.set(datosPago)
 		})
 	},
-	guardarExp(nom,empresa){
-		var fecha = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+	guardarExp(nom,empresa, monto){
+		var fecha = new Date().toJSON()
 		var myRef = qExp.push();
 		var key = myRef.key;
 		var datosExp = {
@@ -80,6 +80,7 @@ var funciones = {
 			codigoExpensa: key,
 			fechaRegistro: fecha,
 			empresaProv: empresa,
+			montoExpensa: monto || 0,
 		};
 		myRef.set(datosExp);
 	}, 

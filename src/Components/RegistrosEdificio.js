@@ -5,7 +5,7 @@ import _ from 'underscore';
 import firebase from './../Functions/conexion'
 import Firebase from 'firebase'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
-import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table , Glyphicon } from 'react-bootstrap';
+import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table , Glyphicon , InputGroup } from 'react-bootstrap';
 
 var db = firebase.database();
 var qExpensas = db.ref("expensas");
@@ -17,7 +17,7 @@ class RegistrosEdificio extends React.Component{
 		this.state = {
 			mostrarModalExp:false, mostrarModalVec: false,
 			CiVec:'',nombreVec:'',apellidoVec:'',telefonoVec:'',
-			arrayExp: [], arrayVec:[],
+			arrayExp: [], arrayVec:[], costoExp: 0,
 			codigoExp:'', nombreExp:'', empresaExp:'',
 		};
 	}
@@ -31,11 +31,18 @@ class RegistrosEdificio extends React.Component{
 		},this );
 	}
 	registrarExpensas =()=>{
-		funciones.guardarExp(
-			this.state.nombreExp,
-			this.state.empresaExp,
-		);
-		this.cerrarModalExp();
+		if(this.state.nombreExp !== "")
+		{
+			funciones.guardarExp(
+				this.state.nombreExp,
+				this.state.empresaExp,
+				this.state.costoExp,
+			);
+			this.cerrarModalExp();
+		}
+		else{
+			alert("Debe guardar al menos el nombre de la expensa")
+		}
 	}
 	/*registrarVecinos=()=>{
 		funciones.guardarVecino(
@@ -52,6 +59,12 @@ class RegistrosEdificio extends React.Component{
 	cerrarModalVec=()=>{this.setState({ mostrarModalVec: false });}
 	handleGuardarNombre=(e)=> { this.setState({ nombreExp: e.target.value, });}
 	handleGuardarEmpresa=(e)=> { this.setState({ empresaExp: e.target.value,});}
+	handleGuardarMonto=(e)=>{
+        const re = /^[0-9\b]+$/
+        if (e.target.value == '' || re.test(e.target.value)) {
+            this.setState({costoExp: Number(e.target.value) || 0})
+        }
+    }
 	render() {
 		return (
 		<div className="RegistrosEdificio">
@@ -67,17 +80,14 @@ class RegistrosEdificio extends React.Component{
 								<th>Codigo</th>
 								<th>Nombre</th>
 								<th>Empresa</th>
+								<th>Monto mensual</th>
 								<th>Registro</th>
-								</tr>
+								<th>Funcion</th>
+							</tr>
 						</thead>
 						<tbody>
-							{_.map(this.state.arrayExp,(value) => 
-								<tr>
-									<td>{value.codigoExpensa}</td>
-									<td>{value.nombreExpensa}</td>
-									<td>{value.empresaProv}</td>
-									<td>{value.fechaRegistro}</td>
-								</tr>
+							{_.map(this.state.arrayExp,(value,key) => 
+								<Expensa expensa={value} expensaId={key}/>
 							)}
 						</tbody>
 					</Table>
@@ -91,6 +101,12 @@ class RegistrosEdificio extends React.Component{
 					<FormControl type="text" onChange={this.handleGuardarNombre} value={this.state.nombreExp} placeholder="Nombre" />
 					<Label>Nombre Empresa a pagar: </Label>
 					<FormControl type="text" onChange={this.handleGuardarEmpresa} value={this.state.empresaExp} placeholder="Empresa" />
+					<Label>Costo mensual de la expensa: </Label>
+					<InputGroup>
+						<InputGroup.Addon>Bs:</InputGroup.Addon>
+						<FormControl type="text" onChange={this.handleGuardarMonto} value={this.state.costoExp} placeholder="0" />
+						<InputGroup.Addon>.00</InputGroup.Addon>
+					</InputGroup>
 				</div>
 				</Modal.Body>
 				<Modal.Footer>
@@ -101,6 +117,76 @@ class RegistrosEdificio extends React.Component{
 		</div>
 		);
 	}		
+}
+
+class Expensa extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            expensa:'',
+            expensaId:'', showModalDelete: false,
+        }
+    }
+    componentWillMount(){
+        var that = this
+        that.setState({
+            expensa: that.props.expensa ||'',
+            expensaId: that.props.expensaId || '',
+        })
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props != nextProps){
+            var that = this
+            that.setState({
+                expensa: nextProps.expensa ||'',
+                expensaId: nextProps.expensaId || '',
+            })
+        }
+    }
+    delete=()=>{
+		firebase.database().ref('expensas').child(this.props.expensaId).on('value',(snapshot)=>{
+			snapshot.ref.remove()
+		});
+		this.closeModalDelete()
+	}
+	openModalDelete=()=>{
+		this.setState({
+			showModalDelete: true,
+		})
+	}
+	closeModalDelete=()=>{
+		this.setState({
+			showModalDelete: false,
+		})
+	}
+    render(){
+		var fecha = new Date(this.state.expensa.fechaRegistro).toJSON().slice(0,10).replace(/-/g,'/')
+        return(
+            <tr>
+                <td>{this.state.expensa.codigoExpensa}</td>
+				<td>{this.state.expensa.nombreExpensa || "0"}</td>
+				<td>{this.state.expensa.empresaProv}</td>
+				<td>{this.state.expensa.montoExpensa}</td>
+				<td>{fecha}</td>
+                <td><Button bsStyle='danger' onClick={this.openModalDelete}>Borrar  <Glyphicon glyph='trash'/></Button>
+				<Button bsStyle='warning'>Borrar  <Glyphicon glyph='pencil'/></Button></td>
+                <Modal show={this.state.showModalDelete} onHide={this.closeModalDelete}>
+					<Modal.Header closeButton>
+						<Modal.Title>Advertencia</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						¿Esta seguro que desea borrar la expensa?
+					</Modal.Body>
+					<Modal.Footer>
+						<ButtonGroup>
+							<Button bsStyle='danger' onClick={this.delete}>Borrar</Button>
+							<Button bsStyle='info' onClick={this.closeModalDelete}>Cancelar</Button>
+						</ButtonGroup>
+					</Modal.Footer>
+				</Modal>
+            </tr>
+        )
+    }
 }
 
 export default RegistrosEdificio

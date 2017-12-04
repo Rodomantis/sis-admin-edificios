@@ -111,10 +111,10 @@ export default class RegistroDep extends React.Component{
                                 {
                                     this.state.buscarVecino === ''?
                                     _.map(this.state.arrayVecinos, (val,key) =>
-                                        <option>{key} {val.displayName}</option>
+                                        <option>{key} | {val.displayName}</option>
                                     ):
                                     _.map(this.state.arrayBuscarVecino, (val,key) =>
-                                        <option>{key} {val.displayName}</option>
+                                        <option>{key} |  {val.displayName}</option>
                                     )
                                 }
                         </FormControl>

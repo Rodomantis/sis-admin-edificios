@@ -12,6 +12,11 @@ import RegistroGastos from './Components/RegistroGastos'
 import EditarUsuario from './Components/EditarUsuario'
 import RegistroProveedor from './Components/RegistroProveedor'
 import SelDepartamento from './Components/SelDepartamento'
+import ConsultaPagos from './Components/ConsultaPagos'
+import ConsultaDescuentos from './Components/ConsultaDescuentos'
+import ConsultaDep from './Components/ConsultaDep'
+import ControlarRecibos from './Components/ControlarRecibos'
+import ControlarPagos from './Components/ControlarPagos'
 import ClienteDep from './Components/ClienteDep'
 import DetallePagoEmpleado from './Components/DetallePagoEmpleado'
 import PagosEmpleado from './Components/PagosEmpleado'
@@ -20,6 +25,7 @@ import AdminUsuarios from './Components/AdminUsuarios'
 import PagosPendientes from './Components/PagosPendientes'
 import CrearUsuario from './Components/CrearUsuario'
 import UserAdmin from './Components/UserAdmin'
+import Deudores from './Components/Deudores'
 import Discusion from './Components/Discusion'
 import PagoDetalle from './Components/PagoDetalle'
 import DetalleServicio from './Components/DetalleServicio'
@@ -48,12 +54,16 @@ ReactDOM.render(
                 <Route path="registros-departamentos" components={RegistroDep} />
                 <Route path="registros-proveedores" components={RegistroProveedor} />
                 <Route path="registros-gastos" components={RegistroGastos} />
+                <Route path="registros-gastos/:idGasto/deudores" components={Deudores} />
                 <Route path="registros-gastos/registro" components={RegGastosEdificio} />
                 <Route path="registros-edificio" components={RegistrosEdificio} />
                 <Route path="registros-cobros-expensas" components={RegistrosCobros} />
                 <Route path="registros-cobros-expensas/:userId/departamentos" components={SelDepartamento} />
                 <Route path="registros-cobros-expensas/:userId/departamentos/:idDepartamento/generar-recibo" components={GenerarRecibo} />
                 <Route path="admin-usuarios" components={AdminUsuarios} />
+                <Route path="admin-usuarios/:userId/departamentos" components={ConsultaDep} />
+                <Route path="admin-usuarios/:userId/departamentos/:idDep/recibos" components={ControlarRecibos} />
+                <Route path="admin-usuarios/:userId/departamentos/:idDep/recibos/:reciboId/pagos" components={ControlarPagos} />
                 <Route path="admin-usuarios/:userId/usuario" components={UserAdmin} />
                 <Route path="admin-solicitudes" components={SolicitationAdmin}/>
                 <Route path="pagos-empleados" components={PagosEmpleado}/>
@@ -65,6 +75,8 @@ ReactDOM.render(
                 <Route path="departamentos/:idDep/detalle-servicio/:idServicio" components={DetalleServicio} />
                 <Route path="departamentos/:idDep/pagos-pendientes" components={PagosPendientes} />
                 <Route path="departamentos" components={ClienteDep} />
+                <Route path="consulta-pagos" components={ConsultaPagos} />
+                <Route path="consulta-pagos/:idPago/descuentos" components={ConsultaDescuentos} />
                 <Route path="editar-usuario" components={EditarUsuario}/>
             </Route>
             <Route path="/foros" component={ForosHome}>

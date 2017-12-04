@@ -37,14 +37,14 @@ export default class AdminHome extends Component {
     render() {
         return (
             <div className='AdminHome'>
-                {this.state.userSavedData.nivel >= 3?
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <div style={{"margin":"10px", "opacity":"0.9", "height":"500px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
-                            {this.props.children}
+                        <div style={{"margin":"10px", "opacity":"0.9", "height":"550px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+                            {this.state.userSavedData.nivel >= 3?
+                                this.props.children:
+                                <h4>No tiene permiso para ingresar a esta funciones</h4>
+                            }
                         </div>
-                    </Col>:
-                    <h4>No tiene permiso para ingresar a esta funciones</h4>
-                }
+                    </Col>
             </div>
         );
     }

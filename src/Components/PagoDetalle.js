@@ -64,11 +64,12 @@ class TablaPagos extends React.Component{
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
 						<tr>
-							<th>ID Pago</th>
-							<th>Codigo gasto Edificio</th>
-							<th>Codigo Expensa</th>
-							<th>Monto</th>
-							<th>Pago servicio</th>
+							<th>ID</th>
+							<th>Id expensa</th>
+							<th>Costo Expensa</th>
+							<th>Fecha Limite</th>
+							<th>Mes Pago</th>
+							<th>Año</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -77,11 +78,13 @@ class TablaPagos extends React.Component{
 								<td>
 									{key}
 								</td>
-								<td>{value.codGastoEd || ''}</td>
-								<td>{value.codExpensa}</td>
+								<td>{value.idPagoExp || ''}</td>
 								<td>{value.costoExpensa}</td>
+								<td>{new Date(value.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/')}</td>
+								<td>{value.mesPago}</td>
+								<td>{value.yearPago}</td>
 								<td>
-									<Link to={`/usuario/${this.props.idVecino}/departamentos/${this.props.idDep}/detalle-servicio/${value.codExpensa}`}>
+									<Link to={`/usuario/${this.props.idVecino}/departamentos/${this.props.idDep}/detalle-servicio/${value.idPagoExp}`}>
 										<Button bsStyle='info'>Historial pago servicio   <Glyphicon glyph='list-alt'/></Button>
 									</Link>
 								</td>

@@ -39,15 +39,12 @@ export default class UserHome extends Component {
             <div className='AdminHome'>
                     <Col xs={12} sm={12} md={12} lg={12}>
                         <div style={{"margin":"10px", "opacity":"0.9", "height":"500px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
-                        {this.state.userSavedData.nivel >= 2?
                             <div>
-                                {this.state.userSavedData.uid != this.props.params.userId?
-                                    <h4>Usted no es el usuario seleccionado</h4>:
-                                    this.props.children
+                                {this.state.userSavedData.uid == this.props.params.userId || this.state.userSavedData.nivel >= 3?
+                                    this.props.children:
+                                    <h3>No tiene permiso para ingresar a estas funciones</h3>
                                 }
-                            </div>:
-                            <h4>No tiene permiso para ingresar a estas funciones</h4>
-                        }
+                            </div>
                         </div>
                     </Col>
                 }

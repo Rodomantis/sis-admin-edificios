@@ -44,8 +44,8 @@ class PagosEmpleado extends React.Component{
 		return(
 			<div className='RegistroCobros'>
 				<h3>Modulo de pagos de empleado</h3>
-				<h4>Seleccionar Vecino para generar recibo</h4>
-				<ControlLabel>Buscar Vecino</ControlLabel>
+				<h4>Seleccionar empleado para generar el pago</h4>
+				<ControlLabel>Buscar empleado</ControlLabel>
 				<FormControl
 					type="text"
 					value={this.state.buscarNombre}

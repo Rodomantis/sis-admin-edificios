@@ -26,7 +26,7 @@ export default class SelDepartamento extends React.Component{
         return(
             <div className='SelDepartamento'>
                 <h3>Lista de departamentos registrados de {this.state.usuario.displayName}</h3>
-                <h4>Seleccionar un departamento para pagar los servicioa</h4>
+                <h4>Seleccionar un departamento para pagar los servicios</h4>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>

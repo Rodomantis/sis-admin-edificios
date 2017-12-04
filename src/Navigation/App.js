@@ -10,9 +10,11 @@ export default class App extends Component {
     }
     render() {
         return (
-            <div className='App' style={Estilos.fondoPrincipal}>
-                <Menu />
-                {this.props.children}
+            <div>
+                <div className='App' style={Estilos.fondoPrincipal}>
+                    <Menu />
+                    {this.props.children}
+                </div>
             </div>
         );
     }

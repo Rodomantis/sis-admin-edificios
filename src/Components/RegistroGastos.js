@@ -45,7 +45,7 @@ export default class RegistroGastos extends React.Component{
                 })
 			}
         });
-        firebase.database().ref('gastos').on('value',(snapshot)=>{
+        firebase.database().ref('gastos').orderByChild('fechaLimite').on('value',(snapshot)=>{
             this.setState({ gastos: snapshot.val() || ''})
         },this)
         firebase.database().ref('expensas').on("value",(snapshot) => {
@@ -63,12 +63,11 @@ export default class RegistroGastos extends React.Component{
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Expensa</th>
-                            <th>Monto</th>
-                            <th>Fecha Inicial</th>
+                            <th>Mes a pagar</th>
+                            <th>Año</th>
+                            <th>Monto Total</th>
+                            <th>Monto por Usuario</th>
                             <th>Fecha Limite</th>
-                            <th>Usuario</th>
-                            <th>Accion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -123,21 +122,29 @@ class Gasto extends React.Component{
 		})
 	}
     render(){
+        var fecha = new Date(this.state.gasto.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/')
         return(
             <tr>
                 <td>{this.state.gastoId}</td>
                 <td>
-                    <ul>
-                        <li>{this.state.gasto.codExpensa || ''}</li>
-                        <li>{this.state.gasto.nombre || ''}</li>
-                        <li>{this.state.gasto.empresa || ''}</li>
-                    </ul>
+                    {this.state.gasto.mesPago}
                 </td>
-                <td>{this.state.gasto.monto}</td>
-                <td>{this.state.gasto.fechaInicial || this.state.gasto.fecha}</td>
-                <td>{this.state.gasto.fechaLimite}</td>
-                <td>{this.state.gasto.usuario}</td>
-                <td><Button bsStyle='danger' onClick={this.openModalDelete}>Borrar  <Glyphicon glyph='trash'/></Button></td>
+                <td>
+                    {this.state.gasto.yearPago}
+                </td>
+                <td>{this.state.gasto.montoExpensas}</td>
+                <td>{this.state.gasto.montoProp}</td>
+                <td>
+                {(new Date().getTime()) > (new Date(this.state.gasto.fechaLimite).getTime())?
+                    <b style={{'color':'red'}}>{fecha}</b>:
+                    fecha
+                }</td>
+                <td>
+                    <Button bsStyle='danger' onClick={this.openModalDelete}>Borrar  <Glyphicon glyph='trash'/></Button>
+                    <Link to={`/administrador/registros-gastos/${this.state.gastoId}/deudores`}>
+                        <Button bsStyle='info'>Ver deudores  <Glyphicon glyph='exclamation-sign'/></Button>
+                    </Link>
+                </td>
                 <Modal show={this.state.showModalDelete} onHide={this.closeModalDelete}>
 					<Modal.Header closeButton>
 						<Modal.Title>Advertencia</Modal.Title>

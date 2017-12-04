@@ -114,7 +114,7 @@ export default class AdminUsuarios extends React.Component{
 					<Button onClick={this.buscarCorreo} bsStyle='warning'>Buscar   <Glyphicon glyph='search'/></Button>
 					</Col>
 				</Row>
-					<h3>Seleccionar Usuario:</h3>
+					<h3>Seleccionar Usuario para modificar o consultar:</h3>
 					<ListaUsuarios listaUsuarios={this.state.correo===''?
 						this.state.arrayUsuarios:
 						this.state.arrayBusqueda
@@ -228,6 +228,9 @@ class UserEdit extends React.Component{
 				<td>
 					<Link to={`/administrador/admin-usuarios/${this.state.usuarioId}/usuario`}>
 						<Button bsStyle='info'>Administrar <Glyphicon glyph='user'/></Button>
+					</Link>
+					<Link to={`/administrador/admin-usuarios/${this.state.usuarioId}/departamentos`}>
+						<Button bsStyle='warning'>Control de pagos <Glyphicon glyph='zoom-in'/></Button>
 					</Link>
 					{this.props.permission >=3?
 						<Button bsStyle='danger' onClick={this.openModalDelete}>Borrar <Glyphicon glyph='trash'/></Button>:

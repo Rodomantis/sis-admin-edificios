@@ -4,6 +4,7 @@ import firebase from './../Functions/conexion'
 import {Link} from 'react-router'
 import { Navbar, NavDropdown, NavItem, Grid, Panel, FormControl, ListGroup, ListGroupItem} from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown'
+import logo from './../Images/LogoGrande.png'
 import { Jumbotron, Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image, Glyphicon } from 'react-bootstrap';
 
 var db = firebase.database()
@@ -63,21 +64,22 @@ export default class Home extends Component {
         return (
             <div>
                 <Col xs={12} sm={12} md={12} lg={12}>
-                    <div style={{"margin":"10px", "opacity":"0.9", "height":"500px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+                    <div style={{"margin":"10px", "opacity":"0.9", "height":"550px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
                         <ListGroup>
                             <ListGroupItem>  
-                                <h2>Bienvenido usuario: </h2>
+                                <Image src={logo}  />
+                                <b><h1>BIENVENIDO USUARIO</h1></b>
                                 <h3>{this.state.userSavedData.displayName || 'Invitado'}</h3>
                                 <h4>Acceda a la función que desee utilizar</h4>
                             </ListGroupItem>
                             <ListGroupItem>
-                                <h2>Mensaje del administrador</h2>
+                                <h2>MENSAJE DE ADMINISTRACIÓN</h2>
                                 <Row>
-                                    <Col xs={0} sm={0} md={3} lg={3}/>
-                                    <Col xs={12} sm={12} md={6} lg={6}>
+                                    <Col xs={0} sm={0} md={2} lg={2}/>
+                                    <Col xs={12} sm={12} md={8} lg={8} style={{'textAlign':'left'}}>
                                         <ReactMarkdown source={this.state.msgAdminData}/>
                                     </Col>
-                                    <Col xs={0} sm={0} md={3} lg={3}/>
+                                    <Col xs={0} sm={0} md={2} lg={2}/>
                                 </Row>
                             </ListGroupItem>
                             {this.state.userSavedData.nivel >= 3?

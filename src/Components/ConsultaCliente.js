@@ -12,7 +12,7 @@ export default class ConsultaCliente extends React.Component{
 		super(props)
 		this.state = {
 			recibosDep: '',
-			idVecino:'', userSavedData: '',
+			idVecino:'', userSavedData: '', departamento: ''
 		}
 	}
 	componentWillMount(){
@@ -47,12 +47,18 @@ export default class ConsultaCliente extends React.Component{
 				recibosDep: snapshot.val()
 			})
 		})
+		firebase.database().ref('departamentos').child(idDep).on('value',(snapshot)=>{
+			that.setState({
+				departamento: snapshot.val() || '',
+				departamentoId: snapshot.key ||  '',
+			})
+		})
 	}
 	render(){
 		return(
 			<div className='ClientHome'>
 				<h3>Lista de recibos pagados: {this.state.userSavedData.displayName || 'NoNAME'}</h3>
-				<h4>Departamento ID: {this.props.params.idDep}</h4>
+				<h4>Departamento N°: <b>{this.state.departamento.numero}</b> | Piso: <b>{this.state.departamento.piso}</b> | Edificio: <b>{this.state.departamento.nombreEdificio}</b></h4>
 				<h3>Seleccione el recibo correspondiente para mas detalle</h3>
 				{this.state.recibosDep === ''?
 					<h4>El cliente no tiene cuentas pagadas</h4>:

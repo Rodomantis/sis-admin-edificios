@@ -33,7 +33,7 @@ export default class GenerarRecibo extends React.Component{
 		pagos.on('value',(pagoSnapshot)=>{
 			var pagosRealizados = []
 			_.map(pagoSnapshot.val(),(value)=>{
-				pagosRealizados = pagosRealizados.concat(value.codGastoEd)
+				pagosRealizados = pagosRealizados.concat(value.idPagoExp)
 			})
 			console.log(pagosRealizados)
 			qExpensas.on('value',(snapshot)=>{
@@ -69,19 +69,18 @@ export default class GenerarRecibo extends React.Component{
 			var data = ''
 			_.map(exp,(value,key)=>{
 				data = { 
-					codGastoEd: key,
-					codExpensa: value.codExpensa || '', 
-					empresa: value.empresa || '',
-					nombre: value.nombre || '', 
-					fechaInicial: value.fechaInicial || '',
-					fechaLimite: value.fechaLimite || '',
-					costo: 0, 
+					idPagoExp: valIdExp,
+					fechaLimite: value.fechaLimite,
+					mesPago: value.mesPago,
+					costo: Number(value.montoProp) || 0,
+					yearPago: value.yearPago,
 				}
 				console.log(data)
 			})
 			var tabExpInicial = that.state.tabExpInicial
 			tabExpInicial.push(data)
 			this.setState({ tabExpInicial: tabExpInicial });
+			this.sumarFactura()
 	}
 	sumarFactura=()=>{
 		var factura = 0
@@ -96,7 +95,7 @@ export default class GenerarRecibo extends React.Component{
 		this.setState({tabExpInicial: array });
 		this.sumarFactura()
 	} 
-	editarCosto=(index,value,cost)=>{
+	/*editarCosto=(index,value,cost)=>{
 		var tabExpInicial= this.state.tabExpInicial
 		tabExpInicial[index] = {
 			codGastoEd: value.codGastoEd || '',
@@ -109,16 +108,34 @@ export default class GenerarRecibo extends React.Component{
 		}
 		this.setState({tabExpInicial: tabExpInicial });
 		this.sumarFactura()
-    }
+    }*/
     guardarRecibo=()=> {
 		if(this.state.totalFactura > 0){
-			funciones.guardarRecibo(
-				this.state.fecha || moment().format(),
-				this.props.params.userId || '',
-				this.state.tabExpInicial || '',
-				this.state.totalFactura || 0,
-				this.props.params.idDepartamento || '',
-			);
+			var recibo = firebase.database().ref('recibos').push()
+			var refKey = recibo.key
+			var datosRecibo = {
+				fechaRecibo: moment().format(),
+				idVecino: this.props.params.userId,
+				totalRecibo: this.state.totalFactura,
+				idDep: this.props.params.idDepartamento
+			}
+			recibo.set(datosRecibo)
+			_.map(this.state.tabExpInicial, (value, key)=>{
+				var qPagos = db.ref('pagos')
+				var pagoRef = qPagos.push()
+				var datosPago = {
+					idRecibo: refKey,
+					fechaPago: moment().format(),
+					idPagoExp: value.idPagoExp,
+					fechaLimite: value.fechaLimite,
+					mesPago: value.mesPago,
+					costoExpensa: Number(value.costo) || 0,
+					idVecino: this.props.params.userId,
+					idDep: this.props.params.idDepartamento,
+					yearPago: value.yearPago,
+				}
+				pagoRef.set(datosPago)
+			})
 			browserHistory.goBack()
 		}
 		else{
@@ -127,34 +144,14 @@ export default class GenerarRecibo extends React.Component{
 	}
 	openModalSave=()=>{this.setState({modalSave:true})}
 	closeModalSave=()=>{this.setState({modalSave:false})}
-	handleDate=(date)=>{
-        var that = this
-        that.setState({
-          date: date
-        },()=>{
-            that.setState({
-                fecha: moment(new Date(date)).format()
-            })
-        });
-    }
 	render(){
 		var fecha = new Date().toJSON().slice(0,10).replace(/-/g,'/')
 		return(
 			<div className='GenerarRecibo'>
 				<h3>Generar recibo para: {this.state.usuario.displayName || this.state.usuario.nombreUsuario}</h3>
-				<h4>Departamento ID: {this.state.departamentoId}</h4>
-				<h4>Fecha: 
-				<DatePicker
-					className="form-control"
-                    readOnly
-                    selected={this.state.date}
-                    onChange={this.handleDate}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={30}
-                    dateFormat="YYYY/MM/DD"
-                />
-				</h4>
+				<h4>Edificio: <b>{this.state.departamento.nombreEdificio}</b> | Piso: <b>{this.state.departamento.piso}</b> | Numero: <b>{this.state.departamento.numero}</b></h4>
+				<h3>Fecha:</h3>
+				<h4>{fecha}</h4>
 				<Row>
 					<Col xs={12} sm={12} md={6} lg={6}>
 						<h4>Lista de Expensas a pagar disponibles</h4>
@@ -164,13 +161,14 @@ export default class GenerarRecibo extends React.Component{
 									<tr>
 										<th>Añadir</th>
 										<th>ID</th>
-										<th>Expensa</th>
-										<th>Fechas</th>
+										<th>Fecha a pagar</th>
+										<th>Fecha Limite</th>
+										<th>Monto</th>
 									</tr>
 								</thead>
 								<tbody>
 									{_.map(this.state.expensas,(value,key)=>
-										<ExpensaAdd expensa={value} expensaId={key} addExpensa={this.addExpensa}/>
+										<ExpensaAdd expensa={value} expensaId={key} addExpensa={this.addExpensa} tabExp={this.state.tabExpInicial}/>
 									)}
 								</tbody>
 							</Table>
@@ -184,14 +182,15 @@ export default class GenerarRecibo extends React.Component{
 									<tr>
 										<th>Borrar</th>
 										<th>ID</th>
-										<th>Expensa</th>
+										<th>Fecha a pagar</th>
+										<th>Fecha Limite</th>
 										<th>Monto</th>
 									</tr>
 								</thead>
 								<tbody>
 									{_.map(this.state.tabExpInicial,(value,key,index)=>
 										<ExpensaEditar expensa={value} index={key}
-										deleteElement={this.deleteElement} editarCosto={this.editarCosto}
+										deleteElement={this.deleteElement}
 										/>
 									)}
 								</tbody>
@@ -259,20 +258,20 @@ class ExpensaEditar extends React.Component{
 		this.props.editarCosto(this.state.index,this.state.expensa,e.target.value)
 	}
 	render(){
+		var fechaLimite = new Date(this.state.expensa.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/');
 		return(
 			<tr>
 				<td><Button bsStyle={'danger'} onClick={this.borrarFila}><Glyphicon glyph='minus'/></Button></td>
-				<td>{this.state.expensa.codGastoEd}</td>
+				<td>{this.state.expensa.idPagoExp}</td>
 				<td>
-					<ul>
-						<li>{this.state.expensa.codExpensa}</li>
-						<li>{this.state.expensa.empresa}</li>
-						<li>{this.state.expensa.nombre}</li>
-					</ul>
+						<p>{this.state.expensa.mesPago}</p>
+						<p>{this.state.expensa.yearPago}</p>
 				</td>
 				<td>
-					<FormControl type="text" style={{"width":"100px"}} 
-					value={this.state.costo} onChange={this.handleCosto}/>
+					{fechaLimite}
+				</td>
+				<td>
+					{this.state.expensa.costo}
 				</td>
 			</tr>
 		)
@@ -292,6 +291,7 @@ class ExpensaAdd extends React.Component{
 		that.setState({
 			expensa: that.props.expensa || '',
 			expensaId: that.props.expensaId || '',
+			tabExp: that.props.tabExp || ''
 		})
 	}
 	componentWillReceiveProps(nextProps){
@@ -300,29 +300,35 @@ class ExpensaAdd extends React.Component{
 			that.setState({
 				expensa: nextProps.expensa || '',
 				expensaId: nextProps.expensaId || '',
+				tabExp: nextProps.tabExp || ''
 			})
 		}
 	}
 	addExp=()=>{
-		this.props.addExpensa(this.state.expensaId)
+		var tabExpKeys = []
+		_.map(this.state.tabExp,(value)=>{
+			tabExpKeys.push(value.idPagoExp)
+		})
+		console.log(tabExpKeys)
+		if(!_.contains(tabExpKeys,this.state.expensaId)){
+			this.props.addExpensa(this.state.expensaId)
+		}
 	}
 	render(){
-		var fechaInicial = new Date(this.state.expensa.fechaInicial).toJSON().slice(0,10).replace(/-/g,'/');
 		var fechaLimite = new Date(this.state.expensa.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/');
 		return(
 			<tr>
 				<td><Button bsStyle='success' onClick={this.addExp}><Glyphicon glyph='plus'/></Button></td>
 				<td>{this.state.expensaId}</td>
 				<td>
-					<ul>
-						<li>{this.state.expensa.codExpensa}</li>
-						<li>{this.state.expensa.empresa}</li>
-						<li>{this.state.expensa.nombre}</li>
-					</ul>
+						<p>{this.state.expensa.mesPago}</p>
+						<p>{this.state.expensa.yearPago}</p>
 				</td>
 				<td>
-					<p>{fechaInicial} -</p>
-					<p>{fechaLimite}</p>
+					{fechaLimite}
+				</td>
+				<td>
+					{this.state.expensa.montoProp}
 				</td>
 			</tr>
 		)

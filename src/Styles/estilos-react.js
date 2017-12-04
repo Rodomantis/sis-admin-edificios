@@ -11,9 +11,9 @@ var Estilos = {
     color: 'red',
   },
   fondoPrincipal: {
-	backgroundImage: 'url('+background+')',
-	minHeight:650,
-	float: 'none',
+    backgroundImage: 'url('+background+')',
+    minHeight:700,
+    float: 'none',
   },
   estiloLogin: {
 	flex: 1,

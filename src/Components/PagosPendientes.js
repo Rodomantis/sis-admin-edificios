@@ -46,7 +46,7 @@ export default class PagosPendientes extends React.Component{
 		pagos.on('value',(pagoSnapshot)=>{
 			var pagosRealizados = []
 			_.map(pagoSnapshot.val(),(value)=>{
-				pagosRealizados = pagosRealizados.concat(value.codGastoEd)
+				pagosRealizados = pagosRealizados.concat(value.idPagoExp)
 			})
 			console.log(pagosRealizados)
 			firebase.database().ref('gastos').on('value',(snapshot)=>{
@@ -68,21 +68,28 @@ export default class PagosPendientes extends React.Component{
         return(
             <div className='PagosPendientes'>
                 <h3>Lista de Gastos</h3>
+                <h4>Expensas sin pagar disponibles</h4>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>ID Expensa</th>
-                            <th>Expensa</th>
-                            <th>Empresa</th>
-                            <th>Monto</th>
-                            <th>Fecha Inicial</th>
+                            <th>Mes pago</th>
+                            <th>Año</th>
                             <th>Fecha Limite</th>
+                            <th>Monto</th>
+                            <th>
+                            {this.state.userSavedData.nivel>=3?
+                                "Realizar Pago":
+                                null
+                            }
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {_.map(this.state.gastos,(value,key)=>
-                            <PagoPendiente gasto={value} gastoId={key}/>
+                            <PagoPendiente gasto={value} gastoId={key} 
+                            nivel={this.state.userSavedData.nivel} idDep={this.props.params.idDep}
+                            userId={this.props.params.userId}/>
                         )}
                     </tbody>
                 </Table>
@@ -118,13 +125,29 @@ class PagoPendiente extends React.Component{
     render(){
         return(
             <tr>
-                <td>{this.state.gastoId}</td>
-                <td>{this.state.gasto.codExpensa || ''}</td>
-                <td>{this.state.gasto.nombre || ''}</td>
-                <td>{this.state.gasto.empresa || ''}</td>
-                <td>{this.state.gasto.monto}</td>
-                <td>{this.state.gasto.fechaInicial || this.state.gasto.fecha}</td>
-                <td>{this.state.gasto.fechaLimite}</td>
+                <td>
+                {(new Date().getTime()) > (new Date(this.state.gasto.fechaLimite).getTime())?
+                    <b style={{'color':'red'}}>{this.state.gastoId}</b>:
+                    this.state.gastoId
+                }
+                </td>
+                <td>{this.state.gasto.mesPago|| ''}</td>
+                <td>{this.state.gasto.yearPago || ''}</td>
+                <td>
+                    {(new Date().getTime()) > (new Date(this.state.gasto.fechaLimite).getTime())?
+                        <b style={{'color':'red'}}>{this.state.gasto.fechaLimite}</b>:
+                        this.state.gasto.fechaLimite
+                    }
+                </td>
+                <td>{this.state.gasto.montoProp}</td>
+                {this.props.nivel >=3?
+                    <td>
+                        <Link to={`/administrador/registros-cobros-expensas/${this.props.userId}/departamentos/${this.props.idDep}/generar-recibo`}>
+                            <Button bsStyle='warning'>Realizar Pago   <Glyphicon glyph='hdd'/></Button>
+                        </Link>
+                    </td>:
+                    null
+                }
             </tr>
         )
     }

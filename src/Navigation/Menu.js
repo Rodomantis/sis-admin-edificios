@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Row, Image} from 'react-bootstrap'
 import Link from 'react-router/lib/Link'
 import firebase from './../Functions/conexion'
+import logo from './../Images/Logo.png'
 
 export default class Menu extends React.Component{
     constructor(props){
@@ -48,7 +49,10 @@ export default class Menu extends React.Component{
             <Navbar inverse collapseOnSelect>
                 <Navbar.Header>
                 <Navbar.Brand>
-                    <a href="/">Sistema de administracion de edificios</a>
+                    <Link to='/'>
+                        <Image src={logo}  style={{'height':'30px'}}/>
+                    </Link>
+                    {/*<a href="/">Sistema de administracion de edificios</a>*/}
                 </Navbar.Brand>
                 <Navbar.Toggle />
                 </Navbar.Header>
@@ -60,8 +64,12 @@ export default class Menu extends React.Component{
                     {this.state.userSavedData.nivel >= 1?
                         <NavDropdown eventKey={2} title="Usuario" id="basic-nav-dropdown">
                             <MenuItem eventKey={2.1} href={`/usuario/${this.state.userSavedData.uid}/departamentos`}>Registros de pagos Realizados</MenuItem>
+                            {this.state.userSavedData.nivel >= 2?
+                                <MenuItem eventKey={2.2} href={`/usuario/${this.state.userSavedData.uid}/consulta-pagos`}>Registros cobro de sueldos</MenuItem>:
+                                null
+                            }
                             <MenuItem divider />
-                            <MenuItem eventKey={2.2} href={`/usuario/${this.state.userSavedData.uid}/editar-usuario`}>Editar usuario</MenuItem>
+                            <MenuItem eventKey={2.3} href={`/usuario/${this.state.userSavedData.uid}/editar-usuario`}>Editar usuario</MenuItem>
                             {/*<MenuItem eventKey={2.3} href={`/usuario/${this.state.userSavedData.uid}/foros`}>Foros</MenuItem>*/}
                         </NavDropdown>: 
                         null
