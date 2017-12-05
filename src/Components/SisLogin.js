@@ -64,6 +64,7 @@ class SisLogin extends React.Component{
 			var errorMessage = error.message;
 			var email = error.email;
 			var credential = error.credential;
+			alert(errorMessage);
 		});	
 		//Para abrir el login en la misma pagina
 		//firebase.auth().signInWithRedirect(provider);
@@ -92,6 +93,7 @@ class SisLogin extends React.Component{
 			var credential = error.credential;
 			console.log(errorCode);
 			console.log(errorMessage);
+			alert(errorMessage);
 		});
 	}
 	loginWithTwitter = () => {
