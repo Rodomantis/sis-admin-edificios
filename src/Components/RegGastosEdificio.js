@@ -99,11 +99,11 @@ export default class RegGastosEdificio extends React.Component{
             var gasto = qGastos.push()
             var gastoKey = gasto.key
             var datosGasto = {
-                montoExpensas: this.state.totalFactura,
+                montoExpensas: Number(this.state.totalFactura),
                 mesPago: this.state.mesPago,
                 yearPago: this.state.yearPago,
                 fechaLimite: this.state.fecha || moment().format(),
-                montoProp: this.state.costoProp || 0,
+                montoProp: Number(this.state.costoProp) || 0,
             }
             gasto.set(datosGasto)
             _.map(this.state.tabExpInicial,(value,key)=>{
@@ -113,7 +113,7 @@ export default class RegGastosEdificio extends React.Component{
                     codExpensa: value.codExpensa || '', 
                     empresaProv: value.empresaProv || '',
                     nombreExpensa: value.nombreExpensa || '',
-                    costoTotalMes: value.costo || 0,
+                    costoTotalMes: Number(value.costo) || 0,
                 }
                 gastoExpensa.set(datosExp)
             })

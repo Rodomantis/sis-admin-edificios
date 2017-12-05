@@ -24,11 +24,30 @@ export default class GenerarRecibo extends React.Component{
 			pagarTabla:'', tabExpInicial: [],
 			totalFactura:0, usuario:'', modalSave: false, 
 			departamento: '', departamentoId: '', fecha: moment().format(),
-			date: moment(),
+			date: moment(), userSavedData: ''
 		}
 	}
 	componentWillMount(){
 		var that = this
+		var user = firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+			  	console.log(user.displayName)
+			  	that.setState({
+				  	userId: user.uid || ''
+			  	})
+			  	var userSavedData = firebase.database().ref('usuarios/'+user.uid)
+			  	userSavedData.on('value', function(value){
+				  	console.log('--->', value.val())
+				  	that.setState({
+					    userSavedData: value.val() || '',
+				  	})
+			  	})
+			} else {
+                that.setState({
+                    userSavedData: '',
+                })
+			}
+        });
 		var pagos = firebase.database().ref('pagos').orderByChild('idDep').equalTo(this.props.params.idDepartamento)
 		pagos.on('value',(pagoSnapshot)=>{
 			var pagosRealizados = []
@@ -215,7 +234,6 @@ export default class GenerarRecibo extends React.Component{
 					</Modal.Body>
 					<Modal.Footer>
 						<Button bsStyle="primary" onClick={this.guardarRecibo}>Guardar</Button>
-						<Button bsStyle="success">Guardar e Imprimir</Button>
 						<Button onClick={this.closeModalSave}>Cerrar</Button>
 					</Modal.Footer>
 				</Modal>
