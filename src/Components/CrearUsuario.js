@@ -49,23 +49,22 @@ export default class Solicitations extends React.Component{
     sendSolicitation=()=>{
         var that = this
         var error = ''
-        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(user=>{
+            browserHistory.goBack()
+        }).catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
-            error = 'Ingrese un password Valido'
-            that.setState({
-                error : 'Ingrese un password Valido'
-            })
-            // ...
+            console.log(errorCode)
+            console.log(errorMessage)
+            if(errorCode == 'auth/email-already-in-use'){
+                that.setState({error : 'Correo ya utilizado'})
+            }else if(errorCode == 'auth/invalid-email'){
+                that.setState({error : 'Correo no valido'})
+            }else if(errorCode == 'auth/weak-password'){
+                that.setState({error : 'Contraseña muy debil'})
+            }
         });
-        if(error == ''){
-            browserHistory.goBack()
-        }else{
-            that.setState({
-                error : 'Ingrese un password Valido'
-            })
-        }
     }
     handleMail=(e)=>{this.setState({email: e.target.value})}
     handlePass=(e)=>{this.setState({password: e.target.value})}
@@ -88,13 +87,11 @@ export default class Solicitations extends React.Component{
                         </Col>
                         <Col xs={0} sm={0} md={4} lg={4}/>
                     </Row>
-                    <Button onClick={this.sendSolicitation} bsStyle="success">Crear Usuario   <Glyphicon glyph='hdd'/></Button>
-                    <Row>
-                        {this.state.error === ''?
+                    {this.state.error === ''?
                             null:
-                            this.state.error
-                        }
-                    </Row>
+                            <p><b>{this.state.error}</b></p>
+                    }
+                    <Button onClick={this.sendSolicitation} bsStyle="success">Crear Usuario   <Glyphicon glyph='hdd'/></Button>
                 </div>
                 }
             </div>
