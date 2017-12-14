@@ -28,6 +28,7 @@ import UserAdmin from './Components/UserAdmin'
 import Deudores from './Components/Deudores'
 import Discusion from './Components/Discusion'
 import PagoDetalle from './Components/PagoDetalle'
+import Multas from './Components/Multas'
 import DetalleServicio from './Components/DetalleServicio'
 import UserHome from './Navigation/UserHome'
 import Solicitations from './Components/Solicitations'
@@ -74,6 +75,7 @@ ReactDOM.render(
                 <Route path="departamentos/:idDep/consulta-pagos/:idRecibo/pago-detalle" components={PagoDetalle}/>
                 <Route path="departamentos/:idDep/detalle-servicio/:idServicio" components={DetalleServicio} />
                 <Route path="departamentos/:idDep/pagos-pendientes" components={PagosPendientes} />
+				<Route path="departamentos/:idDep/multas" components={Multas} />
                 <Route path="departamentos" components={ClienteDep} />
                 <Route path="consulta-pagos" components={ConsultaPagos} />
                 <Route path="consulta-pagos/:idPago/descuentos" components={ConsultaDescuentos} />

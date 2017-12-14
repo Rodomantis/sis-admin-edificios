@@ -53,6 +53,9 @@ export default class ClienteDep extends React.Component{
                                 <Link to={`/usuario/${this.props.params.userId}/departamentos/${key}/pagos-pendientes/`}>
                                     <Button bsStyle='danger'>Consultar pagos pendientes  <Glyphicon glyph='info-sign'/></Button>
                                 </Link>
+								<Link to={`/usuario/${this.props.params.userId}/departamentos/${key}/multas/`}>
+                                    <Button bsStyle='warning'>Consultar multas  <Glyphicon glyph='search'/></Button>
+                                </Link>
                                 </td>
                             </tr>
                         )}

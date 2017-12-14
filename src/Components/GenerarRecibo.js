@@ -154,6 +154,19 @@ export default class GenerarRecibo extends React.Component{
 					yearPago: value.yearPago,
 				}
 				pagoRef.set(datosPago)
+				if((new Date().getTime()) > (new Date(value.fechaLimite).getTime())){
+					var multa = firebase.database().ref('multas').push()
+					var costoMulta = Number(value.costo)*0.1 || 0
+					var datosMulta = {
+						fechaMulta: moment().format(),
+						idDep: this.props.params.idDepartamento,
+						idVecino: this.props.params.userId,
+						motivo: 'Retraso mes '+ value.mesPago+' '+value.yearPago,
+						monto: costoMulta,
+						activa: true,
+					}
+					multa.set(datosMulta)
+				}
 			})
 			browserHistory.goBack()
 		}
