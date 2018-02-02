@@ -76,7 +76,7 @@ export default class Home extends Component {
                                 <h2>MENSAJE DE ADMINISTRACIÓN</h2>
                                 <Row>
                                     <Col xs={0} sm={0} md={2} lg={2}/>
-                                    <Col xs={12} sm={12} md={8} lg={8} style={{'textAlign':'left'}}>
+                                    <Col xs={12} sm={12} md={8} lg={8} style={{'textAlign':'justify'}}>
                                         <ReactMarkdown source={this.state.msgAdminData}/>
                                     </Col>
                                     <Col xs={0} sm={0} md={2} lg={2}/>

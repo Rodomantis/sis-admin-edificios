@@ -5,34 +5,75 @@ import Link from 'react-router/lib/Link'
 import firebase from './../Functions/conexion'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
 import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon } from 'react-bootstrap';
+var db = firebase.database();
 
 export default class Multas extends React.Component{
     constructor(props){
         super(props)
         this.state = {
             departamento: '', multas:'',
-            usuario: '',
+            usuario: '', userSavedData:'',
+            pagosMultas: '',
         }
     }
     componentWillMount(){
+        var that = this;
+		var user = firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+			  	console.log(user.displayName)
+			  	that.setState({
+				  	userId: user.uid || ''
+			  	})
+			  	var userSavedData = firebase.database().ref('usuarios/'+user.uid)
+			  	userSavedData.on('value', function(value){
+				  	console.log('--->', value.val())
+				  	that.setState({
+					    userSavedData: value.val() || '',
+				  	})
+			  	})
+			} else {
+                that.setState({
+                    userSavedData: '',
+                })
+			}
+        });
 		firebase.database().ref('departamentos').child(this.props.params.idDep).on('value',(snapshot)=>{
             this.setState({ departamento: snapshot.val() || ''})
         },this)
         firebase.database().ref('multas').orderByChild('idDep').equalTo(this.props.params.idDep).on('value',(snapshot)=>{
             this.setState({ multas: snapshot.val() || ''})
         },this)
+        var multas = firebase.database().ref('pagosMultas').orderByChild('idDep').equalTo(this.props.params.idDep)
+		multas.on('value',(pagoSnapshot)=>{
+            that.setState({multasPagadas: pagoSnapshot.val()})
+			var multasPagadas = []
+			_.map(pagoSnapshot.val(),(value)=>{
+				multasPagadas = multasPagadas.concat(value.idPagoMulta)
+			})
+            //console.log(pagosRealizados)
+            var qMultas = db.ref("multas").orderByChild('idDep').equalTo(this.props.params.idDep)
+			qMultas.on('value',(snapshot)=>{
+				that.setState({
+					multas: _.pick(snapshot.val(),(value,key)=>
+						!(_.contains(multasPagadas,key))
+					)
+				})
+			})
+		})
     }
     render(){
         return(
             <div className='ClienteDep'>
                 <h3>Lista de multas registradas del departamento: </h3>
 				<h4>Edificio: <b>{this.state.departamento.nombreEdificio}</b> | Piso: <b>{this.state.departamento.piso}</b> | Numero: <b>{this.state.departamento.numero}</b></h4>
+                <div style={{'height': '200px', 'overflowY': 'scroll'}}>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>Fecha</th>
+                            <th>Fecha Multa</th>
                             <th>Motivo</th>
                             <th>Monto</th>
+                            <th>Accion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,10 +82,42 @@ export default class Multas extends React.Component{
                                 <td>{value.fechaMulta}</td>
                                 <td>{value.motivo}</td>
                                 <td>{value.monto}</td>
+                                <td>
+                                {this.state.userSavedData.nivel >=3?
+                                <Link to={`/administrador/registros-cobros-expensas/${this.props.params.userId}/departamentos/${this.props.params.idDep}/pago-multas`}>
+                                    <Button bsStyle={'info'}>Pagar multas   <Glyphicon glyph='plus'/></Button>
+                                </Link>:
+                                'Pago pendiente'
+                                }
+                                </td>
                             </tr>
                         )}
                     </tbody>
                 </Table>
+                </div>
+                <h3>Lista de multas pagadas</h3>
+                <div style={{'height': '200px', 'overflowY': 'scroll'}}>
+                <Table responsive style={{'textAlign':'left'}}>
+                    <thead>
+                        <tr>
+                            <th>Fecha Multa</th>
+                            <th>Fecha de pago</th>
+                            <th>Motivo</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {_.map(this.state.multasPagadas,(value,key)=>
+                            <tr>
+                                <td>{value.fechaMulta}</td>
+                                <td>{value.fechaPago}</td>
+                                <td>{value.motivo}</td>
+                                <td>{value.monto}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+                </div>
             </div>
         )
     }

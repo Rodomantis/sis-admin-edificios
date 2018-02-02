@@ -6,6 +6,8 @@ import App from './Navigation/App'
 import NoMatch from './Navigation/NoMatch'
 import Info from './Components/Info'
 import Home from './Components/Home'
+import Mensajes from './Components/Mensajes' 
+import PagoMultas from './Components/PagoMultas'
 import ConsultaCliente from './Components/ConsultaCliente'
 import RegistroDep from './Components/RegistroDep'
 import RegistroGastos from './Components/RegistroGastos'
@@ -61,6 +63,7 @@ ReactDOM.render(
                 <Route path="registros-cobros-expensas" components={RegistrosCobros} />
                 <Route path="registros-cobros-expensas/:userId/departamentos" components={SelDepartamento} />
                 <Route path="registros-cobros-expensas/:userId/departamentos/:idDepartamento/generar-recibo" components={GenerarRecibo} />
+                <Route path="registros-cobros-expensas/:userId/departamentos/:idDepartamento/pago-multas" components={PagoMultas} />
                 <Route path="admin-usuarios" components={AdminUsuarios} />
                 <Route path="admin-usuarios/:userId/departamentos" components={ConsultaDep} />
                 <Route path="admin-usuarios/:userId/departamentos/:idDep/recibos" components={ControlarRecibos} />
@@ -89,6 +92,7 @@ ReactDOM.render(
             <Route path="/solicitudes" component={Solicitations}/>
             <Route path="/crear-usuario" component={CrearUsuario}/>
             <Route path="/contacto" component={Info}/>
+            <Route path="/mensajes" component={Mensajes}/>
             <Route path="*" component={NoMatch}/>
         </Route>
     </Router>,

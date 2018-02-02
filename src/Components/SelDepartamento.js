@@ -48,7 +48,10 @@ export default class SelDepartamento extends React.Component{
                                 <td>{value.tel}</td>
                                 <td>
                                     <Link to={`/administrador/registros-cobros-expensas/${this.props.params.userId}/departamentos/${key}/generar-recibo`}>
-                                    <Button bsStyle={'warning'}>Generar Recibo <Glyphicon glyph='pencil'/></Button>
+                                    <Button bsStyle={'warning'}>Generar Recibo   <Glyphicon glyph='pencil'/></Button>
+                                    </Link>
+                                    <Link to={`/administrador/registros-cobros-expensas/${this.props.params.userId}/departamentos/${key}/pago-multas`}>
+                                    <Button bsStyle={'info'}>Pagar multas   <Glyphicon glyph='plus'/></Button>
                                     </Link>
                                 </td>
                             </tr>

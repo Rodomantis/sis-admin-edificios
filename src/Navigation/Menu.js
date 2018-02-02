@@ -60,6 +60,10 @@ export default class Menu extends React.Component{
                 <Nav>
                     <NavDropdown eventKey={1} title="Info" id="basic-nav-dropdown">
                         <MenuItem eventKey={1.1} href={`/contacto`}>Contacto</MenuItem>
+                        {this.state.userSavedData.nivel >= 2?
+                            <MenuItem eventKey={1.2} href={`/mensajes`}>Mensajes</MenuItem>:
+                            null
+                        }
                     </NavDropdown>
                     {this.state.userSavedData.nivel >= 1?
                         <NavDropdown eventKey={2} title="Usuario" id="basic-nav-dropdown">
