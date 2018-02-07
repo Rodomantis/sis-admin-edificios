@@ -72,7 +72,7 @@ export default class PagosPendientes extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Codigo Gasto</th>
                             <th>Mes pago</th>
                             <th>Año</th>
                             <th>Fecha Limite</th>
@@ -123,6 +123,7 @@ class PagoPendiente extends React.Component{
         }
     }
     render(){
+        var fecha = new Date(this.state.gasto.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/')
         return(
             <tr>
                 <td>
@@ -135,8 +136,8 @@ class PagoPendiente extends React.Component{
                 <td>{this.state.gasto.yearPago || ''}</td>
                 <td>
                     {(new Date().getTime()) > (new Date(this.state.gasto.fechaLimite).getTime())?
-                        <b style={{'color':'red'}}>{this.state.gasto.fechaLimite}</b>:
-                        this.state.gasto.fechaLimite
+                        <b style={{'color':'red'}}>{fecha}</b>:
+                        fecha
                     }
                 </td>
                 <td>{this.state.gasto.montoProp}</td>

@@ -28,7 +28,7 @@ export default class ConsultaPagos extends React.Component{
                     <Table responsive style={{'textAlign':'left'}}>
                         <thead>
                             <tr>
-                                <th>ID Pago</th>
+                                <th>Codigo Pago</th>
                                 <th>Monto Pago</th>
                                 <th>Fecha Pago</th>
                                 <th>Descuentos</th>

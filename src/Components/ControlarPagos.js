@@ -12,7 +12,7 @@ export default class ControlarPagos extends React.Component{
 	constructor(props){
 		super(props)
 		this.state = {
-			pagos: '', departamento: '', recibo: ''
+			pagos: '', departamento: '', recibo: '', user: ''
 		}
 	}
 	componentWillMount(){
@@ -33,6 +33,11 @@ export default class ControlarPagos extends React.Component{
 				recibo: snapshot.val()
 			})
 		})
+		firebase.database().ref('usuarios').child(this.props.params.userId).on('value', (snapshot)=>{
+			this.setState({
+				user: snapshot.val() || '',
+			})
+		})
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props != nextProps)
@@ -50,19 +55,20 @@ export default class ControlarPagos extends React.Component{
 		var doc = new jsPDF({
 			format: [279.4, 215.9]
 		}) 
+		var numeroRecibo= 0
 		var tablaInicio = 80
 		doc.setFontSize(8)
 		doc.text(20,10,"Condominios Acacias")
 		doc.setFontSize(18)
 		doc.text(60,20,"Recibo de control de expensas:")
 		doc.setFontSize(11)
-		doc.text(20,30,"Recibo Nro:")
+		doc.text(20,30,"Codigo recibo:")
 		doc.setFontSize(11)
 		doc.text(60,30, this.props.params.reciboId)
 		doc.setFontSize(11)
 		doc.text(20,40,"ID Vecino:")
 		doc.setFontSize(11)
-		doc.text(60,40, this.props.params.userId)
+		doc.text(60,40, this.state.user.displayName)
 		doc.setFontSize(11)
 		doc.text(20,50,"Edificio:")
 		doc.setFontSize(11)
@@ -87,8 +93,9 @@ export default class ControlarPagos extends React.Component{
 		doc.text(170,80,"Monto:")
 		_.map(this.state.pagos, (value, key)=>{
 			tablaInicio = tablaInicio + 7
+			numeroRecibo = numeroRecibo + 1 
 			doc.setFontSize(9)
-			doc.text(20,tablaInicio,key)
+			doc.text(20,tablaInicio,numeroRecibo.toString())
 			doc.setFontSize(9)
 			doc.text(70,tablaInicio,value.mesPago)
 			doc.setFontSize(9)
@@ -96,6 +103,10 @@ export default class ControlarPagos extends React.Component{
 			doc.setFontSize(9)
 			doc.text(170,tablaInicio,value.costoExpensa.toString())
 		})
+		tablaInicio = tablaInicio + 5
+		doc.setFontSize(11)
+		doc.text(170,tablaInicio, "_____")
+		doc.setFontSize(11)
 		tablaInicio = tablaInicio + 10
 		doc.setFontSize(11)
 		doc.text(20,tablaInicio,"Monto total a pagar:")
@@ -106,7 +117,7 @@ export default class ControlarPagos extends React.Component{
 		doc.text(20,tablaInicio,"Fecha:")
 		doc.setFontSize(11)
 		doc.text(50,tablaInicio, fecha)
-		doc.save('two-by-four.pdf')
+		doc.save('Recibo:'+ this.props.params.reciboId)
 	}
 	render(){
 		return(

@@ -87,25 +87,28 @@ class TablaRecibos extends React.Component{
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
 						<tr>
-							<th>ID Recibo</th>
+							<th>Codigo Recibo</th>
 							<th>Fecha recibo</th>
 							<th>Total</th>
 							<th>Funcion</th>
 						</tr>
 					</thead>
 					<tbody>
-						{_.map(this.state.recibosDep, (value, key)=>
-							<tr>
-								<td>{key}</td>
-								<td>{value.fechaRecibo}</td>
-								<td>{value.totalRecibo}</td>
-								<td>
-									<Link to={`/usuario/${this.props.idVecino}/departamentos/${this.state.idDep}/consulta-pagos/${key}/pago-detalle`}>
-										<Button bsStyle='info'>Ir a detalle   <Glyphicon glyph='th-list'/></Button>
-									</Link>
-								</td>
-							</tr>
-						)}
+						{_.map(this.state.recibosDep, (value, key)=>{
+							var fecha = new Date(value.fechaRecibo).toJSON().slice(0,10).replace(/-/g,'/')
+							return(
+								<tr key={key}>
+									<td>{key}</td>
+									<td>{fecha}</td>
+									<td>{value.totalRecibo}</td>
+									<td>
+										<Link to={`/usuario/${this.props.idVecino}/departamentos/${this.state.idDep}/consulta-pagos/${key}/pago-detalle`}>
+											<Button bsStyle='info'>Ir a detalle   <Glyphicon glyph='th-list'/></Button>
+										</Link>
+									</td>
+								</tr>
+							)
+						})}
 					</tbody>
 				</Table>
 		)

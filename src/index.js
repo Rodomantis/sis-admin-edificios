@@ -27,6 +27,7 @@ import AdminUsuarios from './Components/AdminUsuarios'
 import PagosPendientes from './Components/PagosPendientes'
 import CrearUsuario from './Components/CrearUsuario'
 import UserAdmin from './Components/UserAdmin'
+import GenerarMulta from './Components/GenerarMulta'
 import Deudores from './Components/Deudores'
 import Discusion from './Components/Discusion'
 import PagoDetalle from './Components/PagoDetalle'
@@ -79,6 +80,7 @@ ReactDOM.render(
                 <Route path="departamentos/:idDep/detalle-servicio/:idServicio" components={DetalleServicio} />
                 <Route path="departamentos/:idDep/pagos-pendientes" components={PagosPendientes} />
 				<Route path="departamentos/:idDep/multas" components={Multas} />
+                <Route path="departamentos/:idDep/multas/nueva" components={GenerarMulta} />
                 <Route path="departamentos" components={ClienteDep} />
                 <Route path="consulta-pagos" components={ConsultaPagos} />
                 <Route path="consulta-pagos/:idPago/descuentos" components={ConsultaDescuentos} />

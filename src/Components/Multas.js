@@ -67,6 +67,12 @@ export default class Multas extends React.Component{
                 <h3>Lista de multas registradas del departamento: </h3>
 				<h4>Edificio: <b>{this.state.departamento.nombreEdificio}</b> | Piso: <b>{this.state.departamento.piso}</b> | Numero: <b>{this.state.departamento.numero}</b></h4>
                 <div style={{'height': '200px', 'overflowY': 'scroll'}}>
+                {this.state.userSavedData.nivel >=3?
+                    <Link to={`/usuario/${this.props.params.userId}/departamentos/${this.props.params.idDep}/multas/nueva`}>
+                        <Button bsStyle={'danger'}>Generar multa   <Glyphicon glyph='plus'/></Button>
+                    </Link>:
+                    null
+                }
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
@@ -85,7 +91,7 @@ export default class Multas extends React.Component{
                                 <td>
                                 {this.state.userSavedData.nivel >=3?
                                 <Link to={`/administrador/registros-cobros-expensas/${this.props.params.userId}/departamentos/${this.props.params.idDep}/pago-multas`}>
-                                    <Button bsStyle={'info'}>Pagar multas   <Glyphicon glyph='plus'/></Button>
+                                    <Button bsStyle={'info'}>Pagar multas   <Glyphicon glyph='lock'/></Button>
                                 </Link>:
                                 'Pago pendiente'
                                 }
