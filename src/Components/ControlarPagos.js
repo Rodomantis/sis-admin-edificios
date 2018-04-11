@@ -5,6 +5,7 @@ import { Navbar, NavDropdown, NavItem, Grid, Table, Glyphicon } from 'react-boot
 import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
 import jsPDF from 'jspdf'
+import logo from './../Images/Logo.png'
 
 var db = firebase.database()
 
@@ -50,7 +51,7 @@ export default class ControlarPagos extends React.Component{
 			})
 		}
 	}
-	imprimir=(idRecibo, idVecino, idDep, total , pagos)=>{
+	imprimir=()=>{
 		var fecha = new Date().toJSON().slice(0,10).replace(/-/g,'/')
 		var doc = new jsPDF({
 			format: [279.4, 215.9]
@@ -60,7 +61,8 @@ export default class ControlarPagos extends React.Component{
 		doc.setFontSize(8)
 		doc.text(20,10,"Condominios Acacias")
 		doc.setFontSize(18)
-		doc.text(60,20,"Recibo de control de expensas:")
+		doc.text(60,20,"Recibo de control de expensas")
+		doc.addImage(logo, 'PNG', 150, 8, 30, 10)
 		doc.setFontSize(11)
 		doc.text(20,30,"Codigo recibo:")
 		doc.setFontSize(11)

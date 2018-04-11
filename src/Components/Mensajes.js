@@ -45,7 +45,7 @@ export default class Mensajes extends React.Component{
     }
     render(){
         return(
-            <div className='Mensajes' style={{"margin":"10px", "opacity":"0.9", "height":"550px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+            <div className='Mensajes' style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
             {this.state.userSavedData.nivel >= 3?
                 <div>
                     <h4>Mensajes de consulta</h4>
@@ -106,7 +106,7 @@ class Mensaje extends React.Component{
     render(){
         return(
             <tr>
-                <td>{this.state.mensaje.fecha}</td>
+                <td>{moment(this.state.mensaje.fecha).format('DD/MM/YYYY')}</td>
                 <td>{this.state.mensajeId}</td>
                 <td>
                     <ButtonGroup vertical>

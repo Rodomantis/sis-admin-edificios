@@ -48,7 +48,8 @@ export default class Foros extends React.Component{
     render(){
         return(
             <div className = 'Foros'>
-                <Button bsStyle='info' onClick={this.crearDiscusion}>Crear tema <Glyphicon glyph='plus'/></Button>
+                <Button bsStyle='info' onClick={this.crearDiscusion}>
+                    Crear tema   <Glyphicon glyph={this.state.crearDiscusion==true?'minus':'plus'}/></Button>
                 <Panel collapsible expanded={this.state.crearDiscusion}>
                     <ForosForm cerrarDiscusion={this.cerrarDiscusion} />
                 </Panel>

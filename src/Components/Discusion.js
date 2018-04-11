@@ -57,8 +57,9 @@ export default class Discusion extends React.Component{
     cerrarComentario=()=>{this.setState({crearComentario: false})}
     render(){
         return(
-            <div className='Discusion' style={{'paddingLeft':'5px', 'paddingRight': '5px'}}>
-                <Button bsStyle='info' onClick={this.crearComentario}>Crear comentario <Glyphicon glyph='plus'/></Button>
+            <div className='Discusion' style={{'paddingLeft':'5px', 'paddingRight': '5px', 'textAlign': 'justify'}}>
+                <Button bsStyle='info' onClick={this.crearComentario}>
+                    Crear comentario   <Glyphicon glyph={this.state.crearComentario == true? 'minus':'plus'}/></Button>
                 <Panel collapsible expanded={this.state.crearComentario}>
                     <ComentarioForm discusionId={this.props.params.discusionId} cerrarComentario={this.cerrarComentario} />
                 </Panel>
