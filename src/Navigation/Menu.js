@@ -3,6 +3,7 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Row, Image} from 'react-bo
 import Link from 'react-router/lib/Link'
 import firebase from './../Functions/conexion'
 import logo from './../Images/Logo.png'
+import { LinkContainer } from 'react-router-bootstrap'
 
 export default class Menu extends React.Component{
     constructor(props){
@@ -59,42 +60,68 @@ export default class Menu extends React.Component{
                 <Navbar.Collapse>
                 <Nav>
                     <NavDropdown eventKey={1} title="Info" id="basic-nav-dropdown">
-                        <MenuItem eventKey={1.1} href={`/contacto`}>Contacto</MenuItem>
+                        <LinkContainer to={`/contacto`}>
+                        <MenuItem eventKey={1.1} href={'#'}>Contacto</MenuItem></LinkContainer>
                         {this.state.userSavedData.nivel >= 2?
-                            <MenuItem eventKey={1.2} href={`/mensajes`}>Mensajes</MenuItem>:
+                            <LinkContainer to={`/mensajes`}>
+                            <MenuItem eventKey={1.2} href={`#`}>Mensajes</MenuItem></LinkContainer>:
                             null
                         }
                     </NavDropdown>
                     {this.state.userSavedData.nivel >= 1?
                         <NavDropdown eventKey={2} title="Usuario" id="basic-nav-dropdown">
-                            <MenuItem eventKey={2.1} href={`/usuario/${this.state.userSavedData.uid}/departamentos`}>Registros de pagos Realizados</MenuItem>
+                            <LinkContainer to={`/usuario/${this.state.userSavedData.uid}/departamentos`}>
+                            <MenuItem eventKey={2.1} href={`#`}>Registros de pagos Realizados</MenuItem>
+                            </LinkContainer>
                             {this.state.userSavedData.nivel >= 2?
-                                <MenuItem eventKey={2.2} href={`/usuario/${this.state.userSavedData.uid}/consulta-pagos`}>Registros cobro de sueldos</MenuItem>:
+                                <LinkContainer to={`/usuario/${this.state.userSavedData.uid}/consulta-pagos`}>
+                                    <MenuItem eventKey={2.2} href={`#`}>Registros cobro de sueldos</MenuItem>
+                                </LinkContainer>:
                                 null
                             }
                             <MenuItem divider />
-                            <MenuItem eventKey={2.3} href={`/usuario/${this.state.userSavedData.uid}/editar-usuario`}>Editar usuario</MenuItem>
+                            <LinkContainer to={`/usuario/${this.state.userSavedData.uid}/editar-usuario`}>
+                            <MenuItem eventKey={2.3} href={`#`}>Editar usuario</MenuItem>
+                            </LinkContainer>
                             {/*<MenuItem eventKey={2.3} href={`/usuario/${this.state.userSavedData.uid}/foros`}>Foros</MenuItem>*/}
                         </NavDropdown>: 
                         null
                     }
                     {this.state.userSavedData.nivel >= 3?
                         <NavDropdown eventKey={3} title="Administrador" id="basic-nav-dropdown">
-                            <MenuItem eventKey={3.1} href='/administrador/registros-edificio'>Registro de expensas</MenuItem>
-                            <MenuItem eventKey={3.2} href='/administrador/registros-cobros-expensas'>Registro de cobros</MenuItem>
-                            <MenuItem eventKey={3.3} href='/administrador/registros-departamentos'>Registro de departamentos</MenuItem>
-                            <MenuItem eventKey={3.4} href='/administrador/admin-solicitudes'>Solicitudes</MenuItem>
+                            <LinkContainer to={`/administrador/registros-edificio`}>
+                            <MenuItem eventKey={3.1} href='#'>Registro de expensas</MenuItem>
+                            </LinkContainer>
+                            <LinkContainer to={`/administrador/registros-cobros-expensas`}>
+                            <MenuItem eventKey={3.2} href='#'>Registro de cobros</MenuItem>
+                            </LinkContainer>
+                            <LinkContainer to={`/administrador/registros-departamentos`}>
+                            <MenuItem eventKey={3.3} href='#'>Registro de departamentos</MenuItem>
+                            </LinkContainer>
+                            <LinkContainer to={`/administrador/admin-solicitudes`}>
+                            <MenuItem eventKey={3.4} href='#'>Solicitudes</MenuItem>
+                            </LinkContainer>
                             <MenuItem divider />
-                            <MenuItem eventKey={3.5} href='/administrador/admin-usuarios'>Control de usuarios</MenuItem>
-                            <MenuItem eventKey={3.6} href='/administrador/registros-proveedores'>Registro de proveedores</MenuItem>
-                            <MenuItem eventKey={3.7} href='/administrador/registros-gastos'>Registro de gastos</MenuItem>
-                            <MenuItem eventKey={3.8} href='/administrador/pagos-empleados'>Pagos a empleados</MenuItem>
+                            <LinkContainer to={`/administrador/admin-usuarios`}>
+                            <MenuItem eventKey={3.5} href='#'>Control de usuarios</MenuItem>
+                            </LinkContainer>
+                            <LinkContainer to={`/administrador/registros-proveedores`}>
+                            <MenuItem eventKey={3.6} href='#'>Registro de proveedores</MenuItem>
+                            </LinkContainer>
+                            <LinkContainer to={`/administrador/registros-gastos`}>
+                            <MenuItem eventKey={3.7} href='#'>Registro de gastos</MenuItem>
+                            </LinkContainer>
+                            <LinkContainer to={`/administrador/pagos-empleados`}>
+                            <MenuItem eventKey={3.8} href='#'>Pagos a empleados</MenuItem>
+                            </LinkContainer>
                         </NavDropdown>: 
                         null
                     }
                     {this.state.userSavedData.nivel >= 1?
                         <NavDropdown eventKey={4} title="Foros" id="basic-nav-dropdown">
-                            <MenuItem eventKey={4.1} href={`/foros/discusiones`}>Lista discusiones</MenuItem>
+                            <LinkContainer to={`/foros/discusiones`}>
+                                <MenuItem eventKey={4.1} href={`#`}>Lista discusiones</MenuItem>
+                            </LinkContainer>
                         </NavDropdown>:
                         null
                     }

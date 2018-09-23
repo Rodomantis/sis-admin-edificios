@@ -6,7 +6,7 @@ export default class NoMatch extends Component {
     }
     render() {
         return (
-            <div style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+            <div style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll", padding: 5}}>
                 <h1>404</h1> 
                 <h3>No se encuentra la pagina</h3>
             </div>

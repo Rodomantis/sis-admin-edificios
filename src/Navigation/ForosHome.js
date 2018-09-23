@@ -38,7 +38,7 @@ export default class ForosHome extends Component {
         return (
             <div className='AdminHome'>
                     <Col xs={12} sm={12} md={12} lg={12}>
-                        <div style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+                        <div style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll", padding: 5}}>
                             {this.state.userSavedData.nivel >= 1?
                                 this.props.children:
                                 <h4>No tiene permiso para acceder al foro</h4>

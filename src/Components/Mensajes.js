@@ -45,7 +45,7 @@ export default class Mensajes extends React.Component{
     }
     render(){
         return(
-            <div className='Mensajes' style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
+            <div className='Mensajes' style={{"opacity":"0.9", "height":"600px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll", padding: 5}}>
             {this.state.userSavedData.nivel >= 3?
                 <div>
                     <h4>Mensajes de consulta</h4>

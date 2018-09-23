@@ -55,12 +55,10 @@ export default class Foros extends React.Component{
                 </Panel>
                 <h3>LISTA DE DISCUSIONES</h3>
                 <h4>Puede crear temas para discuciones del edificio</h4>
-                <Table responsive style={{'textAlign':'left'}}>
+                <Table striped hover responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
                             <th>Titulo</th>
-                            <th>Fecha</th>
-                            <th>Creado por</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -118,10 +116,10 @@ class EditarDiscusion extends React.Component{
         return(
             <tr>
                 <td><Link to={`/foros/discusiones/${this.state.discusionId}`} style={{'color':'black'}}>
-                    <b>{this.state.discusion.titulo}</b>
-                </Link></td>
-                <td>{this.state.discusion.creationDate}</td>
-                <td>{this.state.discusion.creatorName}</td>
+                    <p><b>{this.state.discusion.titulo}</b></p>
+                </Link>
+                <p><b>Creado por: </b>{this.state.discusion.creatorName}<b> Fecha: </b>{this.state.discusion.creationDate}</p>
+                </td>
                 <td>
                     <Link to={`/foros/discusiones/${this.state.discusionId}`}>
                         <Button bsStyle='info'>Acceder  <Glyphicon glyph='list'/></Button>
