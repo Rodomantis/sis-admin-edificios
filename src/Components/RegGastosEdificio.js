@@ -181,7 +181,7 @@ export default class RegGastosEdificio extends React.Component{
 								<thead>
 									<tr>
 										<th>Añadir</th>
-										<th>ID</th>
+										<th>Codigo</th>
 										<th>Expensa</th>
                                         <th>Empresa</th>
 										<th>Monto</th>
@@ -202,7 +202,7 @@ export default class RegGastosEdificio extends React.Component{
 								<thead>
 									<tr>
 										<th>Borrar</th>
-										<th>ID</th>
+										<th>Codigo</th>
 										<th>Expensa</th>
 										<th>Monto</th>
 									</tr>

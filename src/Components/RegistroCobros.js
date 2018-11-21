@@ -41,6 +41,7 @@ class RegistroCobros extends React.Component{
 		},()=>{this.buscarPorNombre();})
 	}
 	render(){
+		var counter = 0
 		return(
 			<div className='RegistroCobros'>
 				<h3>Modulo de generacion de recibos</h3>
@@ -56,7 +57,7 @@ class RegistroCobros extends React.Component{
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
 						<tr>
-							<th>ID</th>
+							<th>#</th>
 							<th>Vecino</th>
 							<th>Correo</th>
 							<th>Accion</th>
@@ -64,12 +65,14 @@ class RegistroCobros extends React.Component{
 					</thead>
 					<tbody>
 					{this.state.arrayBuscar === ''?
-						_.map(this.state.usuarios,(value,key)=>
-							<SeleccionVecino vecino={value} idVecino={key}/>
-						):
-						_.map(this.state.arrayBuscar,(value,key)=>
-							<SeleccionVecino vecino={value} idVecino={key}/>
-						)
+						_.map(this.state.usuarios,(value,key)=>{
+							counter=counter+1
+							return <SeleccionVecino num={counter} vecino={value} idVecino={key}/>
+						}):
+						_.map(this.state.arrayBuscar,(value,key)=>{
+							counter=counter+1
+							return <SeleccionVecino num={counter} vecino={value} idVecino={key}/>
+						})
 					}
 					</tbody>
 				</Table>
@@ -106,7 +109,7 @@ class SeleccionVecino extends React.Component{
 	render(){
 		return(
 			<tr>
-				<td>{this.state.idVecino}</td>
+				<td>{this.props.num}</td>
 				<td>
 					{this.state.vecino.displayName || this.state.vecino.nombreUsuario}
 				</td>

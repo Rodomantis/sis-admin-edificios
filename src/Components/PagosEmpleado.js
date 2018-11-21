@@ -41,6 +41,7 @@ class PagosEmpleado extends React.Component{
 		},()=>{this.buscarPorNombre();})
 	}
 	render(){
+		var counter = 0
 		return(
 			<div className='RegistroCobros'>
 				<h3>Modulo de pagos de empleado</h3>
@@ -65,12 +66,14 @@ class PagosEmpleado extends React.Component{
 					</thead>
 					<tbody>
 					{this.state.arrayBuscar === ''?
-						_.map(this.state.usuarios,(value,key)=>
-							<SeleccionUsuario usuario={value} idUsuario={key}/>
-						):
-						_.map(this.state.arrayBuscar,(value,key)=>
-							<SeleccionUsuario usuario={value} idUsuario={key}/>
-						)
+						_.map(this.state.usuarios,(value,key)=>{
+							counter=counter+1
+							return <SeleccionUsuario num={counter} usuario={value} idUsuario={key}/>
+						}):
+						_.map(this.state.arrayBuscar,(value,key)=>{
+							counter = counter+1
+							return <SeleccionUsuario num={counter} usuario={value} idUsuario={key}/>
+						})
 					}
 					</tbody>
 				</Table>
@@ -106,7 +109,7 @@ class SeleccionUsuario extends React.Component{
 	render(){
 		return(
 			<tr>
-				<td>{this.state.idUsuario}</td>
+				<td>{this.props.num}</td>
 				<td>
 					{this.state.usuario.displayName || this.state.usuario.nombreUsuario}
 				</td>

@@ -4,6 +4,7 @@ import { Navbar, NavDropdown, NavItem, Grid, Table, Glyphicon } from 'react-boot
 import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } from 'react-bootstrap';
 import firebase from './../Functions/conexion'
 import Link from 'react-router/lib/Link'
+import moment from 'moment'
 
 var db = firebase.database()
 
@@ -83,11 +84,12 @@ class TablaRecibos extends React.Component{
 		})
 	}
 	render(){
+		var counter = 0
 		return(
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
 						<tr>
-							<th>Codigo Recibo</th>
+							<th>#</th>
 							<th>Fecha recibo</th>
 							<th>Total</th>
 							<th>Funcion</th>
@@ -95,10 +97,11 @@ class TablaRecibos extends React.Component{
 					</thead>
 					<tbody>
 						{_.map(this.state.recibosDep, (value, key)=>{
-							var fecha = new Date(value.fechaRecibo).toJSON().slice(0,10).replace(/-/g,'/')
+							counter = counter+1
+							var fecha = moment(value.fechaRecibo).format('DD/MM/YYYY')
 							return(
 								<tr key={key}>
-									<td>{key}</td>
+									<td>{counter}</td>
 									<td>{fecha}</td>
 									<td>{value.totalRecibo}</td>
 									<td>

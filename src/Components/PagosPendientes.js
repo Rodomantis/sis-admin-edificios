@@ -65,6 +65,7 @@ export default class PagosPendientes extends React.Component{
 		},this );
     }
     render(){
+        var counter = 0
         return(
             <div className='PagosPendientes'>
                 <h3>Lista de Gastos</h3>
@@ -72,7 +73,7 @@ export default class PagosPendientes extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>Codigo Gasto</th>
+                            <th>#</th>
                             <th>Mes pago</th>
                             <th>Año</th>
                             <th>Fecha Limite</th>
@@ -86,11 +87,12 @@ export default class PagosPendientes extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(this.state.gastos,(value,key)=>
-                            <PagoPendiente gasto={value} gastoId={key} 
+                        {_.map(this.state.gastos,(value,key)=>{
+                            counter= counter+1
+                            return <PagoPendiente num={counter} gasto={value} gastoId={key} 
                             nivel={this.state.userSavedData.nivel} idDep={this.props.params.idDep}
                             userId={this.props.params.userId}/>
-                        )}
+                        })}
                     </tbody>
                 </Table>
             </div>
@@ -128,8 +130,8 @@ class PagoPendiente extends React.Component{
             <tr>
                 <td>
                 {(new Date().getTime()) > (new Date(this.state.gasto.fechaLimite).getTime())?
-                    <b style={{'color':'red'}}>{this.state.gastoId}</b>:
-                    this.state.gastoId
+                    <b style={{'color':'red'}}>{this.props.num}</b>:
+                    this.props.num
                 }
                 </td>
                 <td>{this.state.gasto.mesPago|| ''}</td>

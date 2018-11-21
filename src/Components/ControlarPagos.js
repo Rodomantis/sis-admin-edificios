@@ -149,6 +149,7 @@ class TablaPagos extends React.Component{
 		})
 	}
 	render(){
+		var counter = 0
 		return(
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
@@ -161,17 +162,18 @@ class TablaPagos extends React.Component{
 						</tr>
 					</thead>
 					<tbody>
-						{_.map(this.state.pagos, (value, key)=>
-							<tr>
+						{_.map(this.state.pagos, (value, key)=>{
+							counter = counter+1
+							return <tr>
 								<td>
-									{key}
+									{counter}
 								</td>
 								<td>{value.mesPago || ''}</td>
                                 <td>{value.yearPago || ''}</td>
                                 <td>{value.fechaLimite || ''}</td>
 								<td>{value.costoExpensa || 0}</td>
 							</tr>
-						)}
+						})}
 					</tbody>
 				</Table>
 		)

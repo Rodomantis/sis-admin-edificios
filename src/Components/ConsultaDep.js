@@ -23,6 +23,7 @@ export default class ConsultaDep extends React.Component{
 		},this )
     }
     render(){
+        var counter = 0
         return(
             <div className='ConsultaDep'>
                 <h3>Lista de departamentos registrados de {this.state.usuario.displayName}</h3>
@@ -39,9 +40,10 @@ export default class ConsultaDep extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(this.state.departamentos,(value,key)=>
-                            <tr>
-                                <td>{key}</td>
+                        {_.map(this.state.departamentos,(value,key)=>{
+                            counter = counter+1
+                            return <tr>
+                                <td>{counter}</td>
                                 <td>{value.nombreEdificio}</td>
                                 <td>{value.piso}</td>
                                 <td>{value.numero}</td>
@@ -58,7 +60,7 @@ export default class ConsultaDep extends React.Component{
                                 </Link>
                                 </td>
                             </tr>
-                        )}
+                        })}
                     </tbody>
                 </Table>
             </div>

@@ -60,6 +60,7 @@ export default class RegistroProveedor extends React.Component{
     }
     handleMail =(e)=>{this.setState({email: e.target.value})}
     render(){
+        var counter = 0
         return(
             <div className='RegisterDep'>
                 <Button bsSize='large' bsStyle='danger' onClick={this.abrirModalProv}>Registrar Proveedores</Button>
@@ -77,9 +78,10 @@ export default class RegistroProveedor extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(this.state.proveedores,(value,key)=>
-                            <Proveedor proveedor={value} proveedorId={key}/>
-                        )}
+                        {_.map(this.state.proveedores,(value,key)=>{
+                            counter = counter+1
+                            return <Proveedor num={counter} proveedor={value} proveedorId={key}/>
+                        })}
                     </tbody>
                 </Table>
                 <Modal show={this.state.openModalProv} onHide={this.cerrarModalProv}>
@@ -88,7 +90,7 @@ export default class RegistroProveedor extends React.Component{
                     </Modal.Header>
                     <Modal.Body>
                         <Label>Nombre</Label>
-                        <FormControl type="text" onChange={this.handleName} value={this.state.name} placeholder="Nombre del edificio" />
+                        <FormControl type="text" onChange={this.handleName} value={this.state.name} placeholder="Nombre" />
                         <Label>Direccion</Label>
                         <FormControl type="text" onChange={this.handleAddress} value={this.state.address} placeholder="Direccion" />
                         <Label>Telefono</Label>
@@ -151,7 +153,7 @@ class Proveedor extends React.Component{
     render(){
         return(
             <tr>
-                <td>{this.state.proveedorId}</td>
+                <td>{this.props.num}</td>
                 <td>{this.state.proveedor.nombre}</td>
                 <td>{this.state.proveedor.direccion}</td>
                 <td>{this.state.proveedor.telefono}</td>

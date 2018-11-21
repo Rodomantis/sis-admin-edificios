@@ -6,6 +6,7 @@ import { Button, ButtonGroup, DropdownButton, MenuItem, Nav, Row, Col, Image } f
 import firebase from './../Functions/conexion'
 import jsPDF from 'jspdf'
 import logo from './../Images/Logo.png'
+import moment from 'moment'
 
 var db = firebase.database()
 
@@ -142,7 +143,7 @@ export default class PagoDetalle extends React.Component{
 	render(){
 		return(
 			<div className='PagoDetalle'>
-				<h3>Detalle del recibo: {this.props.params.idRecibo}</h3>
+				<h3>Detalle del recibo Codigo: {this.props.params.idRecibo}</h3>
 				<h4>Hacer click en el ID del servicio para ver todos los pagos</h4>
 				<Button bsStyle='danger' onClick={this.imprimir}>Imprimir Recibo   <Glyphicon glyph='hdd'/></Button>
 				{this.state.pagos === ''?
@@ -167,12 +168,13 @@ class TablaPagos extends React.Component{
 		})
 	}
 	render(){
+		var counter = 0
 		return(
 				<Table responsive style={{'textAlign':'left'}}>
 					<thead>
 						<tr>
-							<th>ID</th>
-							<th>Id expensa</th>
+							<th>#</th>
+							<th>Codigo expensa</th>
 							<th>Costo Expensa</th>
 							<th>Fecha Limite</th>
 							<th>Mes Pago</th>
@@ -180,14 +182,15 @@ class TablaPagos extends React.Component{
 						</tr>
 					</thead>
 					<tbody>
-						{_.map(this.state.pagos, (value, key)=>
-							<tr>
+						{_.map(this.state.pagos, (value, key)=>{
+							counter=counter+1
+							return <tr>
 								<td>
-									{key}
+									{counter}
 								</td>
 								<td>{value.idPagoExp || ''}</td>
 								<td>{value.costoExpensa}</td>
-								<td>{new Date(value.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/')}</td>
+								<td>{moment(value.fechaLimite).format('DD/MM/YYYY')}</td>
 								<td>{value.mesPago}</td>
 								<td>{value.yearPago}</td>
 								<td>
@@ -196,7 +199,7 @@ class TablaPagos extends React.Component{
 									</Link>
 								</td>
 							</tr>
-						)}
+						})}
 					</tbody>
 				</Table>
 		)

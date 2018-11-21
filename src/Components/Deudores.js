@@ -41,11 +41,10 @@ export default class Deudores extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Edificio</th>
                             <th>Piso</th>
                             <th>Numero</th>
-                            <th>Propietario</th>
+                            <th>Cod. Propietario</th>
                             <th>Telefono</th>
                             <th>Funcion</th>
                         </tr>
@@ -53,7 +52,6 @@ export default class Deudores extends React.Component{
                     <tbody>
                         {_.map(this.state.departamentos,(value,key)=>
                             <tr>
-                                <td>{key}</td>
                                 <td>{value.nombreEdificio}</td>
                                 <td>{value.piso}</td>
                                 <td>{value.numero}</td>
@@ -76,18 +74,16 @@ export default class Deudores extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Edificio</th>
                             <th>Piso</th>
                             <th>Numero</th>
-                            <th>Propietario</th>
+                            <th>Cod. Propietario</th>
                             <th>Telefono</th>
                         </tr>
                     </thead>
                     <tbody>
                         {_.map(this.state.depAlDia,(value,key)=>
                             <tr>
-                                <td>{key}</td>
                                 <td>{value.nombreEdificio}</td>
                                 <td>{value.piso}</td>
                                 <td>{value.numero}</td>

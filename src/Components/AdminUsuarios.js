@@ -111,7 +111,7 @@ export default class AdminUsuarios extends React.Component{
 					<Col xs={12} md={4} sm={4} lg={4}>
 					<h4>Buscar Usuario:</h4>
 					<FormControl type="text" name="txtCorreoBuscar" onChange={this.handleBuscarUsuario} placeholder="Buscar correo de usuario" />
-					<Button onClick={this.buscarCorreo} bsStyle='warning'>Buscar   <Glyphicon glyph='search'/></Button>
+					<Button block onClick={this.buscarCorreo} bsStyle='warning'>Buscar   <Glyphicon glyph='search'/></Button>
 					</Col>
 				</Row>
 					<h3>Seleccionar Usuario para modificar o consultar:</h3>
@@ -157,11 +157,12 @@ class ListaUsuarios extends React.Component{
 		})
 	}
 	render(){
+		var counter = 0
 		return(
 			<Table responsive style={{'textAlign':'left'}}>
 				<thead>
 					<tr>
-						<th>UID</th>
+						<th>#</th>
 						<th>Nombre</th>
 						<th>Correo</th>
 						<th>Nivel</th>
@@ -169,9 +170,10 @@ class ListaUsuarios extends React.Component{
 					</tr>
 				</thead>
 				<tbody>
-				{_.map(this.props.listaUsuarios,(value,key)=>
-					<UserEdit usuario={value} usuarioId={key} permission={this.state.userSavedData.nivel}/>
-				)}
+				{_.map(this.props.listaUsuarios,(value,key)=>{
+					counter=counter+1
+					return <UserEdit num={counter} usuario={value} usuarioId={key} permission={this.state.userSavedData.nivel}/>
+				})}
 				</tbody>
 			</Table>
 		)
@@ -221,7 +223,7 @@ class UserEdit extends React.Component{
 	render(){
 		return(
 			<tr>
-				<td>{this.state.usuarioId}</td>
+				<td>{this.props.num}</td>
 				<td>{this.state.usuario.displayName}</td>
 				<td>{this.state.usuario.email}</td>
 				<td>{this.state.usuario.nivel}</td>

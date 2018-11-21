@@ -66,6 +66,7 @@ class RegistrosEdificio extends React.Component{
         }
     }
 	render() {
+		var counter = 0
 		return (
 		<div className="RegistrosEdificio">
 			<Row>
@@ -77,7 +78,7 @@ class RegistrosEdificio extends React.Component{
 			<Table responsive style={{'textAlign':'left'}}>
 						<thead>
 							<tr>
-								<th>Codigo</th>
+								<th>#</th>
 								<th>Nombre</th>
 								<th>Empresa</th>
 								<th>Monto mensual</th>
@@ -86,9 +87,10 @@ class RegistrosEdificio extends React.Component{
 							</tr>
 						</thead>
 						<tbody>
-							{_.map(this.state.arrayExp,(value,key) => 
-								<Expensa expensa={value} expensaId={key}/>
-							)}
+							{_.map(this.state.arrayExp,(value,key) => {
+								counter=counter+1
+								return <Expensa num={counter} expensa={value} expensaId={key}/>
+							})}
 						</tbody>
 					</Table>
 			<Modal show={this.state.mostrarModalExp} onHide={this.cerrarModalExp}>
@@ -111,7 +113,7 @@ class RegistrosEdificio extends React.Component{
 				</Modal.Body>
 				<Modal.Footer>
 					<Button bsStyle="primary" onClick={this.registrarExpensas}>Registrar   <Glyphicon glyph='hdd'/></Button>
-					<Button bsStyle="danger" onClick={this.cerrarModalExp}>Cerrar   <Glyphicon glyph='remove'/></Button>
+					{/*<Button bsStyle="danger" onClick={this.cerrarModalExp}>Cerrar   <Glyphicon glyph='remove'/></Button>*/}
 				</Modal.Footer>
 			</Modal>
 		</div>
@@ -163,7 +165,7 @@ class Expensa extends React.Component{
 		var fecha = new Date(this.state.expensa.fechaRegistro).toJSON().slice(0,10).replace(/-/g,'/')
         return(
             <tr>
-                <td>{this.state.expensa.codigoExpensa}</td>
+                <td>{this.props.num}</td>
 				<td>{this.state.expensa.nombreExpensa || "0"}</td>
 				<td>{this.state.expensa.empresaProv}</td>
 				<td>{this.state.expensa.montoExpensa}</td>

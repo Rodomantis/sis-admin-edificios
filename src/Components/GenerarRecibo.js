@@ -192,7 +192,7 @@ export default class GenerarRecibo extends React.Component{
 								<thead>
 									<tr>
 										<th>Añadir</th>
-										<th>ID</th>
+										<th>Codigo</th>
 										<th>Fecha a pagar</th>
 										<th>Fecha Limite</th>
 										<th>Monto</th>
@@ -213,7 +213,7 @@ export default class GenerarRecibo extends React.Component{
 								<thead>
 									<tr>
 										<th>Borrar</th>
-										<th>ID</th>
+										<th>Codigo</th>
 										<th>Fecha a pagar</th>
 										<th>Fecha Limite</th>
 										<th>Monto</th>

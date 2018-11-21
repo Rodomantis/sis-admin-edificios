@@ -5,6 +5,8 @@ import Link from 'react-router/lib/Link'
 import firebase from './../Functions/conexion'
 import { ControlLabel, Button, Form, Label, FormControl, FormGroup, Password, Modal, Popover, Tooltip, Select } from 'react-bootstrap';
 import { Nav, NavItem, handleSelect, DropdownButton, MenuItem, Row, Col, ButtonGroup, Table, Glyphicon } from 'react-bootstrap';
+import moment from 'moment'
+
 var db = firebase.database();
 
 export default class Multas extends React.Component{
@@ -73,6 +75,7 @@ export default class Multas extends React.Component{
                     </Link>:
                     null
                 }
+                <br/>
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
@@ -85,7 +88,7 @@ export default class Multas extends React.Component{
                     <tbody>
                         {_.map(this.state.multas,(value,key)=>
                             <tr>
-                                <td>{value.fechaMulta}</td>
+                                <td>{moment(value.fechaMulta).format('DD/MM/YYYY hh:mm')}</td>
                                 <td>{value.motivo}</td>
                                 <td>{value.monto}</td>
                                 <td>
@@ -101,6 +104,7 @@ export default class Multas extends React.Component{
                     </tbody>
                 </Table>
                 </div>
+                <br/>
                 <h3>Lista de multas pagadas</h3>
                 <div style={{'height': '200px', 'overflowY': 'scroll'}}>
                 <Table responsive style={{'textAlign':'left'}}>
@@ -115,8 +119,8 @@ export default class Multas extends React.Component{
                     <tbody>
                         {_.map(this.state.multasPagadas,(value,key)=>
                             <tr>
-                                <td>{value.fechaMulta}</td>
-                                <td>{value.fechaPago}</td>
+                                <td>{moment(value.fechaMulta).format('DD/MM/YYYY hh:mm')}</td>
+                                <td>{moment(value.fechaPago).format('DD/MM/YYYY hh:mm')}</td>
                                 <td>{value.motivo}</td>
                                 <td>{value.monto}</td>
                             </tr>

@@ -120,7 +120,15 @@ class SisLogin extends React.Component{
 					<Col xs={12} sm={12} md={12} lg={12}>
 					<div style={{"margin":"10px", "opacity":"0.9", "height":"500px", "backgroundColor":"white","borderRadius": "10px", "overflowY": "scroll"}}>
 						{this.state.userSavedData.nivel <=4?
-						<h4>Usuario comprobado, ya puede ingresar a la pagina</h4>:
+						<div>
+						<h4>Usuario comprobado, ya puede ingresar a la pagina</h4>
+						<Row>
+						<Col md={4} mdOffset={4}>
+						<Link to='/'><Button block bsStyle='danger'>Ir al Inicio <Glyphicon glyph='home'/></Button></Link>
+						<Link to={`/usuario/${this.state.userId}/departamentos`}><Button block bsStyle='primary'>Ir a consultas <Glyphicon glyph='inbox'/></Button></Link>
+						</Col>
+						</Row>
+						</div>:
 						<div>
 							<h3>Ingreso al sistema</h3>
 							<h4>Para ingresar al sistema puede conectarse mediante una de estas redes sociales</h4>

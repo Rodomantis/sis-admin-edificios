@@ -23,6 +23,7 @@ export default class SelDepartamento extends React.Component{
 		},this )
     }
     render(){
+        var counter = 0
         return(
             <div className='SelDepartamento'>
                 <h3>Lista de departamentos registrados de {this.state.usuario.displayName}</h3>
@@ -30,7 +31,7 @@ export default class SelDepartamento extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>#</th>
                             <th>Edificio</th>
                             <th>Piso</th>
                             <th>Numero</th>
@@ -39,9 +40,10 @@ export default class SelDepartamento extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(this.state.departamentos,(value,key)=>
-                            <tr>
-                                <td>{key}</td>
+                        {_.map(this.state.departamentos,(value,key)=>{
+                            counter = counter+1
+                            return <tr>
+                                <td>{counter}</td>
                                 <td>{value.nombreEdificio}</td>
                                 <td>{value.piso}</td>
                                 <td>{value.numero}</td>
@@ -55,7 +57,7 @@ export default class SelDepartamento extends React.Component{
                                     </Link>
                                 </td>
                             </tr>
-                        )}
+                        })}
                     </tbody>
                 </Table>
             </div>

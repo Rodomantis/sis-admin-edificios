@@ -72,6 +72,7 @@ export default class RegistroDep extends React.Component{
         }
     }
     render(){
+        var counter = 0
         return(
             <div className='RegisterDep'>
                 <Button bsSize='large' bsStyle='danger'
@@ -85,8 +86,8 @@ export default class RegistroDep extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>ID Dueño</th>
+                            <th>#</th>
+                            <th>Codigo Dueño</th>
                             <th>Edificio</th>
                             <th>Piso</th>
                             <th>Numero</th>
@@ -95,9 +96,10 @@ export default class RegistroDep extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(this.state.departamentos,(value,key)=>
-                            <Departamento departamento={value} departamentoId={key}/>
-                        )}
+                        {_.map(this.state.departamentos,(value,key)=>{
+                            counter = counter+1
+                            return <Departamento num={counter} departamento={value} departamentoId={key}/>
+                        })}
                     </tbody>
                 </Table>
                 <Modal show={this.state.openModalDep} onHide={this.cerrarModaldep}>
@@ -180,7 +182,7 @@ class Departamento extends React.Component{
     render(){
         return(
             <tr>
-                <td>{this.state.departamentoId}</td>
+                <td>{this.props.num}</td>
                 <td>{this.state.departamento.propietario}</td>
                 <td>{this.state.departamento.nombreEdificio}</td>
                 <td>{this.state.departamento.piso}</td>

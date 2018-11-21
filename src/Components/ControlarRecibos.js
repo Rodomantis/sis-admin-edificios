@@ -60,6 +60,7 @@ export default class ControlaRecibos extends React.Component{
 		})
 	}
 	render(){
+		var counter = 0
 		return(
 			<div className='ControlarRecibos'>
 				<h3>Lista de recibos pagados: {this.state.user.displayName || 'NoNAME'}</h3>
@@ -70,16 +71,17 @@ export default class ControlaRecibos extends React.Component{
 					<Table responsive style={{'textAlign':'left'}}>
 						<thead>
 							<tr>
-								<th>ID Recibo</th>
+								<th>#</th>
 								<th>Fecha recibo</th>
 								<th>Total</th>
 								<th>Funcion</th>
 							</tr>
 						</thead>
 						<tbody>
-							{_.map(this.state.recibosDep, (value, key)=>
-								<Recibo recibo={value} reciboId={key} userId={this.props.params.userId} idDep={this.props.params.idDep}/>
-							)}
+							{_.map(this.state.recibosDep, (value, key)=>{
+								counter = counter+1
+								return <Recibo num={counter} recibo={value} reciboId={key} userId={this.props.params.userId} idDep={this.props.params.idDep}/>
+							})}
 						</tbody>
 					</Table>
 				}
@@ -136,7 +138,7 @@ class Recibo extends React.Component{
 	render(){
 		return(
 			<tr>
-				<td>{this.state.reciboId}</td>
+				<td>{this.props.num}</td>
 				<td>{this.state.recibo.fechaRecibo}</td>
 				<td>{this.state.recibo.totalRecibo}</td>
 				<td>

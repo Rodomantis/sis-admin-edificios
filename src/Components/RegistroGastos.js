@@ -53,6 +53,7 @@ export default class RegistroGastos extends React.Component{
 		},this );
     }
     render(){
+        var counter = 0
         return(
             <div className='RegisterDep'>
                 <Link to='/administrador/registros-gastos/registro'>
@@ -62,7 +63,7 @@ export default class RegistroGastos extends React.Component{
                 <Table responsive style={{'textAlign':'left'}}>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>#</th>
                             <th>Mes a pagar</th>
                             <th>Año</th>
                             <th>Monto Total</th>
@@ -71,9 +72,10 @@ export default class RegistroGastos extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(this.state.gastos,(value,key)=>
-                            <Gasto gasto={value} gastoId={key}/>
-                        )}
+                        {_.map(this.state.gastos,(value,key)=>{
+                            counter=counter+1
+                            return <Gasto num={counter} gasto={value} gastoId={key}/>
+                        })}
                     </tbody>
                 </Table>
             </div>
@@ -125,7 +127,7 @@ class Gasto extends React.Component{
         var fecha = new Date(this.state.gasto.fechaLimite).toJSON().slice(0,10).replace(/-/g,'/')
         return(
             <tr>
-                <td>{this.state.gastoId}</td>
+                <td>{this.props.num}</td>
                 <td>
                     {this.state.gasto.mesPago}
                 </td>
