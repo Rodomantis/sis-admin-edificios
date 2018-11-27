@@ -38,7 +38,7 @@ export default class RegGastosEdificio extends React.Component{
         var expensas = firebase.database().ref('expensas')
         expensas.on('value',(snapshot)=>{
             that.setState({
-                expensas: snapshot.val() || ''
+                expensas: snapshot.val() || '',
             })
         })
         var meses= ['Enero', 'Febrero', 'Marzo', 'Abril',
