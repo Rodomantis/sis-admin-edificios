@@ -126,14 +126,16 @@ class Expensa extends React.Component{
         super(props)
         this.state = {
             expensa:'',
-            expensaId:'', showModalDelete: false,
+			expensaId:'', showModalDelete: false,
+			showModalEdit: false, 
         }
     }
     componentWillMount(){
         var that = this
         that.setState({
             expensa: that.props.expensa ||'',
-            expensaId: that.props.expensaId || '',
+			expensaId: that.props.expensaId || '',
+			montoExpensa: that.props.expensa.montoExpensa || 0,
         })
     }
     componentWillReceiveProps(nextProps){
@@ -141,7 +143,8 @@ class Expensa extends React.Component{
             var that = this
             that.setState({
                 expensa: nextProps.expensa ||'',
-                expensaId: nextProps.expensaId || '',
+				expensaId: nextProps.expensaId || '',
+				montoExpensa: nextProps.expensa.montoExpensa || 0,
             })
         }
     }
@@ -151,16 +154,17 @@ class Expensa extends React.Component{
 		});
 		this.closeModalDelete()
 	}
-	openModalDelete=()=>{
-		this.setState({
-			showModalDelete: true,
-		})
+	editExpensa=()=>{
+		var that = this
+		var expensa = firebase.database().ref('expensas').child(this.props.expensaId)
+		expensa.update({montoExpensa: that.state.montoExpensa})
+		this.closeModalEdit()
 	}
-	closeModalDelete=()=>{
-		this.setState({
-			showModalDelete: false,
-		})
-	}
+	handleMonto=(e)=>{this.setState({montoExpensa: e.target.value || 0})}
+	openModalDelete=()=>{this.setState({showModalDelete: true,})}
+	closeModalDelete=()=>{this.setState({showModalDelete: false,})}
+	openModalEdit=()=>{this.setState({showModalEdit: true})}
+	closeModalEdit=()=>{this.setState({showModalEdit: false})}
     render(){
 		var fecha = new Date(this.state.expensa.fechaRegistro).toJSON().slice(0,10).replace(/-/g,'/')
         return(
@@ -171,7 +175,7 @@ class Expensa extends React.Component{
 				<td>{this.state.expensa.montoExpensa}</td>
 				<td>{fecha}</td>
                 <td><Button bsStyle='danger' onClick={this.openModalDelete}>Borrar  <Glyphicon glyph='trash'/></Button>
-				<Button bsStyle='warning'>Borrar  <Glyphicon glyph='pencil'/></Button></td>
+				<Button onClick={this.openModalEdit} bsStyle='warning'>Editar  <Glyphicon glyph='pencil'/></Button></td>
                 <Modal show={this.state.showModalDelete} onHide={this.closeModalDelete}>
 					<Modal.Header closeButton>
 						<Modal.Title>Advertencia</Modal.Title>
@@ -183,6 +187,25 @@ class Expensa extends React.Component{
 						<ButtonGroup>
 							<Button bsStyle='danger' onClick={this.delete}>Borrar</Button>
 							<Button bsStyle='info' onClick={this.closeModalDelete}>Cancelar</Button>
+						</ButtonGroup>
+					</Modal.Footer>
+				</Modal>
+                <Modal show={this.state.showModalEdit} onHide={this.closeModalEdit}>
+					<Modal.Header closeButton>
+						<Modal.Title>Editar Monto</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<Label>Costo mensual de la expensa: </Label>
+						<InputGroup>
+							<InputGroup.Addon>Bs:</InputGroup.Addon>
+							<FormControl type="text" onChange={this.handleMonto} value={this.state.montoExpensa} placeholder="0" />
+							<InputGroup.Addon>.00</InputGroup.Addon>
+						</InputGroup>
+					</Modal.Body>
+					<Modal.Footer>
+						<ButtonGroup>
+							<Button bsStyle='success' onClick={this.editExpensa}>Guardar</Button>
+							<Button bsStyle='info' onClick={this.closeModalEdit}>Cancelar</Button>
 						</ButtonGroup>
 					</Modal.Footer>
 				</Modal>

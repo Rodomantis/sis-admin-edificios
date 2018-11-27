@@ -71,9 +71,9 @@ export default class RegGastosEdificio extends React.Component{
 	sumarFactura=()=>{
 		var factura = 0
 		_.map(this.state.tabExpInicial,value=>{
-			factura = factura + value.costo
+			factura = Number(factura) + Number(value.costo)
 		})
-		this.setState({totalFactura: factura || 0})
+		this.setState({totalFactura: Number(factura || 0)})
 	}
 	deleteElement=(index)=>{
 		var array = this.state.tabExpInicial;
@@ -93,8 +93,8 @@ export default class RegGastosEdificio extends React.Component{
 		this.sumarFactura()
     }
     guardarGasto=()=> {
-        if(this.state.totalFactura == 0){
-            alert('Debe marcar expensas para pagar')
+        if(this.state.totalFactura == 0 || this.state.costoProp == 0){
+            alert('Debe existir un monto a pagar')
         }else{
             var gasto = qGastos.push()
             var gastoKey = gasto.key
@@ -134,7 +134,7 @@ export default class RegGastosEdificio extends React.Component{
     }
     handleMes=(e)=>{this.setState({mesPago: e.target.value})}
     handleYear=(e)=>{this.setState({yearPago: e.target.value})}
-    handleCostoProp=(e)=>{this.setState({costoProp: e.target.value})}
+    handleCostoProp=(e)=>{this.setState({costoProp: e.target.value || 0})}
 	render(){
 		var fecha = new Date().toJSON()
 		return(
